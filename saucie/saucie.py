@@ -28,7 +28,8 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
         self.history = []
 
     def fit(self, X, y=None):
-        self.callback = EarlyStopping(monitor='loss', patience=5)
+        self.callback = EarlyStopping(monitor='loss', patience=5,
+                                      restore_best_weights=True)
         self.layers[3] = 2
         if y is None:
             y = np.zeros(X.shape[0])
@@ -107,7 +108,8 @@ class SAUCIE_labels(BaseEstimator, ClusterMixin, TransformerMixin):
         self.random_state = random_state
 
     def fit(self, X, y=None):
-        self.callback = EarlyStopping(monitor='loss', patience=5)
+        self.callback = EarlyStopping(monitor='loss', patience=5,
+                                      restore_best_weights=True)
         self.layers[3] = 2
         ncol = X.shape[1]
         if self.normalize:
