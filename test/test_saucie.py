@@ -1,6 +1,6 @@
 import io
-import pickle
 
+import joblib
 import numpy as np
 from sklearn.base import clone
 from sklearn.datasets import make_blobs
@@ -169,18 +169,18 @@ def test_SAUCIE_batches_is_clonable():
 def test_SAUCIE_is_picklable():
     obj = SAUCIE_labels()
     with io.BytesIO() as f:
-        pickle.dump(obj, f)
+        joblib.dump(obj, f)
         f.seek(0)
-        obj2 = pickle.load(f)
+        obj2 = joblib.load(f)
     assert str(obj) == str(obj2)
 
 
 def test_SAUCIE_batches_is_picklable():
     obj = SAUCIE_batches()
     with io.BytesIO() as f:
-        pickle.dump(obj, f)
+        joblib.dump(obj, f)
         f.seek(0)
-        obj2 = pickle.load(f)
+        obj2 = joblib.load(f)
     assert str(obj) == str(obj2)
 
 
@@ -192,9 +192,9 @@ def test_SAUCIE_pickling_restores_tf_graph():
     encoded1 = saucie.transform(data)
 
     with io.BytesIO() as f:
-        pickle.dump(saucie, f)
+        joblib.dump(saucie, f)
         f.seek(0)
-        saucie2 = pickle.load(f)
+        saucie2 = joblib.load(f)
 
     saucie2.fit(data)
     labels2 = saucie2.predict(data)
@@ -211,9 +211,9 @@ def test_SAUCIE_batches_pickling_restores_tf_graph():
     cleaned1 = saucie.transform(data, batches)
 
     with io.BytesIO() as f:
-        pickle.dump(saucie, f)
+        joblib.dump(saucie, f)
         f.seek(0)
-        saucie2 = pickle.load(f)
+        saucie2 = joblib.load(f)
 
     saucie2.fit(data, batches)
     cleaned2 = saucie2.transform(data, batches)

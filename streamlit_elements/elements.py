@@ -1,6 +1,6 @@
 import io
-import pickle
 
+import joblib
 import streamlit as st
 
 
@@ -15,7 +15,7 @@ def display_buttons(labels, dim_red,
 
     col2.download_button("Download model",
                          model,
-                         file_name="model.pickle",
+                         file_name="model.joblib",
                          help="""Download model for clustering
                           and dimensionality reduction""",
                          mime='application/octet-stream')
@@ -28,10 +28,10 @@ def display_buttons(labels, dim_red,
     if model_batch is not None:
         col2.download_button("Download model - batches",
                              model_batch,
-                             file_name="model.csv",
+                             file_name="model_batches.joblib",
                              help="""Download model for batch correction
                               and data cleaning""",
-                             mime='text/csv')
+                             mime='application/octet-stream')
 
         col1.download_button("Download cleaned data",
                              cleaned,
@@ -42,7 +42,7 @@ def display_buttons(labels, dim_red,
 @st.cache
 def dump_model(model):
     f = io.BytesIO()
-    pickle.dump(model, f)
+    joblib.dump(model, f)
     f.seek(0)
     return f
 
