@@ -4,63 +4,35 @@ An implementation of SAUCIE (Sparse Autoencoder for Clustering, Imputing, and Em
 This repository is a fork of the [original SAUCIE implementation](https://github.com/KrishnaswamyLab/SAUCIE). The authors let me use it for my Bachelor thesis and bump the used tensorflow version to 2, as well as build a web application using the model architecture.  
 The code used for measuring the goodness of the dimensionality reduction can be found [here](https://github.com/pachterlab/CBP_2021).
 
-## Requirements
-All tests performed with:
-```
-tensorflow 1.4.0
-numpy 1.13.3
-```
-
-## Installation
-
-Download with
-
-```
-git clone https://github.com/amrukwa/SAUCIE.git
-```
-
-install requirements with
-
-```
-pip install -r SAUCIE/requirements.txt
-```
-
-and then add SAUCIE to your Python path (e.g. by running Python in the same directory in which you ran `git clone`, or by adding that directory with `sys.path.append("/path/to/git/")`.
-
 
 ## Usage
-SAUCIE is a python object that loads data from a numpy matrix and produces numpy matrix output for the reconstruction, visualization, and/or clusters. Standard usage is to train a model from a numpy matrix and get the embedding, reconstruction, or clusters for that data. This can be done with:
+### Docker
+The project is dockerized. You can use `base_tf_test.Dockerfile` to build an image. If you want to use the interactive streamlit application, run the container with `-p 8501:8501`.
+### From the source repository
+TBA
+### Package
+TBA
+### On remote server
+TBA
+
+## The modules
+The models (batch correction and dimensionality reduction/clustering versions) are prepared following the scikit-learn estimator standards. This means you can use the models as follow:
+#### Batch correction
+``` 
+from saucie.saucie import SAUCIE_batches
+
+saucie = SAUCIE_batches()
+saucie.fit(data, batches)
+cleaned = saucie.transform(data, batches)
 ```
-data = ...
+#### Clustering and dimensionality reduction
+``` 
+from saucie.saucie import SAUCIE_labels
 
-import SAUCIE
-
-saucie = SAUCIE.SAUCIE(data.shape[1])
-loadtrain = SAUCIE.Loader(data, shuffle=True)
-saucie.train(loadtrain, steps=1000)
-
-loadeval = SAUCIE.Loader(data, shuffle=False)
-embedding = saucie.get_embedding(loadeval)
-number_of_clusters, clusters = saucie.get_clusters(loadeval)
-reconstruction = saucie.get_reconstruction(loadeval)
-
-... work with numpy results as desired ...
+saucie = SAUCIE_labels()
+saucie.fit(data)
+encoded = saucie.transform(data)
+labels = saucie.predict(data)
 ```
-
-## Example
-See `scripts/example.py` for an example of running SAUCIE on data. You can also see a tutorial on Google Colab [here](https://colab.research.google.com/github/KrishnaswamyLab/SingleCellWorkshop/blob/master/exercises/Deep_Learning/notebooks/02_Answers_Exploratory_analysis_of_single_cell_data_with_SAUCIE.ipynb).
-
-## Running
-SAUCIE also comes with the option of running a full cohort of samples if the data is prepared in a specific way under `scripts/SAUCIE.py`. Namely, for a folder of CSV (or FCS files if the flag --fcs is provided), an example of how to use SAUCIE for both batch correction and clustering is:
-```
-python SAUCIE.py --input_dir path/to/input/files
-                 --output_dir path/for/output/files
-                 --batch_correct
-                 --cluster
-                 [--lambda_b .1]
-                 [--lambda_c .1]
-                 [--lambda_d .2];
-```
-The input directory must contain the CSV (or FCS if you specify --fcs) you wish to run SAUCIE on. If you do not want to run SAUCIE on all columns in the input file, a file named cols_to_use.txt with the 0-indexed column numbers, one per line can be provided.
-
-In the output directory, if batch correction was done, there will be a folder ```batch_corrected``` with a batch-corrected CSV (or FCS) file corresponding to each original file. If clustering was done, there will also be a folder ```clustered``` with a clustered file corresponding to each original file. In each clustered file, there is either the original or batch-corrected data with additional columns giving the cluster number and the X and Y coordinate for the visualization.
+***  
+More info about the parameters of the estimators can be found in the 'saucie/saucie.py' file.
