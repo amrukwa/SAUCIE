@@ -2,12 +2,10 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from streamlit_elements.elements import display_buttons
-from streamlit_elements.scores import display_scores
-from streamlit_elements.elements import dump_model, convert_df
-from streamlit_elements.figures import prepare_figure
 from saucie.saucie import SAUCIE_batches, SAUCIE_labels
-
+from streamlit_elements.elements import convert_df, display_buttons, dump_model
+from streamlit_elements.figures import prepare_figure
+from streamlit_elements.scores import display_scores
 
 if __name__ == "__main__":
     st.set_page_config(
