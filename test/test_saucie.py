@@ -9,6 +9,9 @@ from saucie.saucie import SAUCIE_batches, SAUCIE_labels
 
 
 def data_saucie():
+    """
+    prepare exemplary test data
+    """
     data = make_blobs(
         n_samples=10000,
         n_features=20,
@@ -20,12 +23,19 @@ def data_saucie():
 
 
 def data_batches():
+    """
+    prepare exemplary test data for batches
+    """
     rng = np.random.default_rng(42)
     data = rng.integers(0, 3, 10000)
     return data
 
 
 def test_SAUCIE_compresses_data():
+    """
+    test if SAUCIE reduces the data to 2 dimensions
+    and does not lose the samples
+    """
     data = data_saucie()
     saucie = SAUCIE_labels(epochs=2, lr=1e-6, normalize=True,
                            random_state=42, verbose=0)
@@ -35,6 +45,10 @@ def test_SAUCIE_compresses_data():
 
 
 def test_SAUCIE_batches_preserves_data_shape():
+    """
+    test if SAUCIE cleans the data
+    and does not lose the samples or features
+    """
     data = data_saucie()
     batches = data_batches()
     saucie = SAUCIE_batches(epochs=2, lr=1e-9, normalize=True,
@@ -45,6 +59,10 @@ def test_SAUCIE_batches_preserves_data_shape():
 
 
 def test_SAUCIE_labels_data():
+    """
+    test if SAUCIE clusters the data,
+    decodes the labels and does not lose the samples
+    """
     data = data_saucie()
     saucie = SAUCIE_labels(epochs=2, lr=1e-6, normalize=True,
                            random_state=42, verbose=0)
@@ -54,6 +72,9 @@ def test_SAUCIE_labels_data():
 
 
 def test_SAUCIE_batches_preserves_ref_batch():
+    """
+    test if SAUCIE does not modify the samples from reference batch
+    """
     data = data_saucie()
     batches = data_batches()
     saucie = SAUCIE_batches(epochs=2, lr=1e-9, normalize=False,
@@ -65,6 +86,10 @@ def test_SAUCIE_batches_preserves_ref_batch():
 
 
 def test_SAUCIE_yields_stable_results_without_training():
+    """
+    test if SAUCIE classifier and transformer
+    can be initialized with set seed and produces reproducible model
+    """
     data = data_saucie()
     saucie = SAUCIE_labels(epochs=0, lr=1e-6, normalize=True,
                            random_state=42, verbose=0)
@@ -82,6 +107,11 @@ def test_SAUCIE_yields_stable_results_without_training():
 
 
 def test_SAUCIE_yields_stable_results_with_training():
+    """
+    test if SAUCIE classifier and transformer
+    can be initialized with set seed,
+    is stable during training and produces reproducible results
+    """
     data = data_saucie()
     saucie = SAUCIE_labels(epochs=2, lr=1e-6, normalize=True,
                            random_state=42, verbose=0)
@@ -99,6 +129,10 @@ def test_SAUCIE_yields_stable_results_with_training():
 
 
 def test_SAUCIE_batches_yields_stable_results_without_training():
+    """
+    test if SAUCIE batch transformer can be initialized with set seed
+    and produces reproducible model
+    """
     data = data_saucie()
     batches = data_batches()
     saucie = SAUCIE_batches(epochs=0, lr=1e-9, normalize=True,
@@ -115,6 +149,10 @@ def test_SAUCIE_batches_yields_stable_results_without_training():
 
 
 def test_SAUCIE_batches_yields_stable_results_with_training():
+    """
+    test if SAUCIE batch transformer can be initialized with set seed,
+    is stable during training and produces reproducible results
+    """
     data = data_saucie()
     batches = data_batches()
     saucie = SAUCIE_batches(epochs=2, lr=1e-9, normalize=True,
@@ -131,6 +169,10 @@ def test_SAUCIE_batches_yields_stable_results_with_training():
 
 
 def test_SAUCIE_batches_yields_stable_results_batches_order():
+    """
+    test if SAUCIE batch transformer returns the same result for
+    the nonreference batch independently of the order of transforming
+    """
     data = data_saucie()
     batches = data_batches()
     saucie = SAUCIE_batches(epochs=2, lr=1e-9, normalize=True,
@@ -146,6 +188,10 @@ def test_SAUCIE_batches_yields_stable_results_batches_order():
 
 
 def test_SAUCIE_is_clonable():
+    """
+    test if SAUCIE classifier and transformer can be cloned
+    with scikit-learn clone function and retain the attributes
+    """
     data = data_saucie()
     saucie = SAUCIE_labels(epochs=2, lr=1e-6, normalize=True,
                            verbose=0, random_state=42)
@@ -162,6 +208,10 @@ def test_SAUCIE_is_clonable():
 
 
 def test_SAUCIE_batches_is_clonable():
+    """
+    test if SAUCIE batch transformer can be cloned
+    with scikit-learn clone function and retain the attributes
+    """
     data = data_saucie()
     batches = data_batches()
     saucie = SAUCIE_batches(epochs=2, lr=1e-9, normalize=True,
