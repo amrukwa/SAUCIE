@@ -2,6 +2,7 @@ from copy import deepcopy
 
 import numpy as np
 from sklearn.base import BaseEstimator, ClusterMixin, TransformerMixin
+from tensorflow.keras.callbacks import EarlyStopping
 
 from saucie.saucie_bn import SAUCIE_BN
 
@@ -27,6 +28,7 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
         self.history = []
 
     def fit(self, X, y=None):
+        self.callback = EarlyStopping(monitor='loss', patience=5)
         self.layers[3] = 2
         if y is None:
             y = np.zeros(X.shape[0])
@@ -70,6 +72,7 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
                                      y=None,
                                      epochs=self.epochs,
                                      batch_size=self.batch_size,
+                                     callbacks=[self.callback],
                                      shuffle=True,
                                      verbose=self.verbose
                                      )]
@@ -104,6 +107,7 @@ class SAUCIE_labels(BaseEstimator, ClusterMixin, TransformerMixin):
         self.random_state = random_state
 
     def fit(self, X, y=None):
+        self.callback = EarlyStopping(monitor='loss', patience=5)
         self.layers[3] = 2
         ncol = X.shape[1]
         if self.normalize:
@@ -126,6 +130,7 @@ class SAUCIE_labels(BaseEstimator, ClusterMixin, TransformerMixin):
                                     y=None,
                                     epochs=self.epochs,
                                     batch_size=self.batch_size,
+                                    callbacks=[self.callback],
                                     shuffle=self.shuffle,
                                     verbose=self.verbose
                                     )
