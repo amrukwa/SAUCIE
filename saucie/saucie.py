@@ -48,7 +48,7 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
                               lambda_b=self.lambda_b,
                               layers=self.layers,
                               seed=self.random_state)
-        # list and then unpack if too long line
+
         self.ae_, _, _ = saucie_bn.get_architecture(self.lr)
         return self
 
