@@ -8,6 +8,12 @@ from tensorflow.random import set_seed
 
 
 class SAUCIE_BN(object):
+    """
+    Implementation of SAUCIE Neural Network Architecture
+    Keras-based implementation of fully connected autoencoder
+    equipped with MMD regularization for batch correction,
+    ID regularization and intracluster distances for clustering.
+    """
     def __init__(self,
                  input_dim,
                  lambda_b=0,
@@ -17,6 +23,17 @@ class SAUCIE_BN(object):
                  layers=[512, 256, 128, 2],
                  seed=None
                  ):
+        """
+        :param input_dim: the number of features of the data
+        :param lambda_b: the coefficient for the MMD regularization
+        :param lambda_c: the coefficient for the ID regularization
+        :param layer_c: the index of layer_dimensions that ID regularization
+                        should be applied to (usually len(layer_dimensions)-2)
+        :param lambda_d: the coefficient for the intracluster
+                        distance regularization
+        :param layers: the size of the autoencoder layers
+        :param seed: the seed to initialize the layers with
+        """
         self.input_dim = input_dim
         self.lambda_b = lambda_b
         self.lambda_c = lambda_c
@@ -26,7 +43,9 @@ class SAUCIE_BN(object):
         self.seed = seed
 
     def _build_layers(self):
-        """ Add SAUCIE layers and consecutive losses. """
+        """
+        Add SAUCIE layers and consecutive losses.
+        """
         # ENCODER
         input_shape = (self.input_dim, )
         inputs = Input(shape=input_shape, name='encoder_input')
@@ -170,6 +189,13 @@ class SAUCIE_BN(object):
         return ref_loss + 0.1*nonref_loss
 
     def _calculate_batch_var(self, dists, batches, batch):
+        """
+        Calculate how the samples in the batch vary
+
+        :param dists: the matrix of distances in the latent space
+        :param batches: the tensor of batches names
+        :param batch: the name of batch the calculation is performed for
+        """
         batch_el = tf.squeeze(tf.equal(batches, batch))
         batch_el = tf.ensure_shape(batch_el, [None])
 

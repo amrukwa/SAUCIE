@@ -8,6 +8,9 @@ from saucie.saucie_bn import SAUCIE_BN
 
 
 class SAUCIE_batches(BaseEstimator, TransformerMixin):
+    """
+    Batch correction model for scRNA-seq data
+    """
     def __init__(self,
                  lambda_b=0.1,
                  lr=1e-3,
@@ -17,6 +20,17 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
                  verbose="auto",
                  normalize=False,
                  random_state=None):
+        """
+        :param lambda_b: the coefficient for the MMD regularization
+        :param lr: the learning rate for the model training
+        :param epochs: the number of epochs the model should be trained for
+        :param layers: the size of consecutive autoencoder layers
+        :param batch_size: the size of batch the data will be feed to model in
+        :param verbose: verbosity mode for the training
+        :param normalize: whether to normalize the data
+        :param random_state: the random state to initialize the model
+                            layers with
+        """
         self.lambda_b = lambda_b
         self.lr = lr
         self.epochs = epochs
@@ -96,6 +110,19 @@ class SAUCIE_labels(BaseEstimator, ClusterMixin, TransformerMixin):
                  verbose="auto",
                  normalize=False,
                  random_state=None):
+        """
+        :param lambda_c: the coefficient for the ID regularization
+        :param lambda_d: the coefficient for the intracluster
+                        distance regularization
+        :param lr: the learning rate for the model training
+        :param epochs: the number of epochs the model should be trained for
+        :param layers: the size of consecutive autoencoder layers
+        :param batch_size: the size of batch the data will be feed to model in
+        :param verbose: verbosity mode for the training
+        :param normalize: whether to normalize the data
+        :param random_state: the random state to initialize the model
+                            layers with
+        """
         self.lambda_c = lambda_c
         self.lambda_d = lambda_d
         self.lr = lr

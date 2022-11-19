@@ -6,6 +6,9 @@ import streamlit as st
 
 def display_buttons(labels, dim_red,
                     model, cleaned=None, model_batch=None):
+    """
+    display the buttons in the app window
+    """
     col1, col2 = st.columns([0.4, 1], gap="small")
 
     col1.download_button("Download labels ",
@@ -41,6 +44,9 @@ def display_buttons(labels, dim_red,
 
 @st.cache
 def dump_model(model):
+    """
+    export joblib model for downloading
+    """
     f = io.BytesIO()
     joblib.dump(model, f)
     f.seek(0)
@@ -49,5 +55,7 @@ def dump_model(model):
 
 @st.cache
 def convert_df(df):
-    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    """
+    convert dataframe to downloading format
+    """
     return df.to_csv().encode('utf-8')

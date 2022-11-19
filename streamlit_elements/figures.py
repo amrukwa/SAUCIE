@@ -6,6 +6,9 @@ from plotly.subplots import make_subplots
 
 @st.cache
 def prepare_figure(x, y, saucie_label, ground_truth=None):
+    """
+    Prepare figure to display in the steamlit
+    """
     if ground_truth is not None:
         fig = prepare_subplots()
         fig = get_subplot(fig, x, y, ground_truth,
@@ -19,6 +22,9 @@ def prepare_figure(x, y, saucie_label, ground_truth=None):
 
 
 def prepare_subplots():
+    """
+    Prepare subplots for the figure
+    """
     fig = make_subplots(rows=1, cols=2,
                         shared_xaxes=True,
                         subplot_titles=("Original labels",
@@ -32,6 +38,9 @@ def prepare_subplots():
 
 
 def prepare_single_plot():
+    """
+    Prepare the layout for a single plot
+    """
     fig = go.Figure()
     fig.update_layout(title_text="SAUCIE results")
     fig.update_xaxes(title_text='SAUCIE 1')
@@ -40,6 +49,9 @@ def prepare_single_plot():
 
 
 def add_to_single_plot(fig, x, y, labels):
+    """
+    Add the data to a single plot
+    """
     single_labels = np.unique(labels)
     for label in single_labels:
         fig.add_trace(go.Scatter(x=x[np.where(labels == label)],
@@ -51,6 +63,9 @@ def add_to_single_plot(fig, x, y, labels):
 
 
 def get_subplot(fig, x, y, labels, title="", col=1):
+    """
+    Add the data to a specified subplot
+    """
     single_labels = np.unique(labels)
     for label in single_labels:
         fig.add_trace(go.Scatter(x=x[np.where(labels == label)],

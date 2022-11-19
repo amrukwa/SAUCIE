@@ -226,7 +226,11 @@ def test_SAUCIE_batches_is_clonable():
     np.testing.assert_array_equal(cleaned1, cleaned2)
 
 
-def test_SAUCIE_is_picklable():
+def test_SAUCIE_is_exportable():
+    """
+    test if SAUCIE classifier and transformer can be exported
+    with joblib
+    """
     obj = SAUCIE_labels()
     with io.BytesIO() as f:
         joblib.dump(obj, f)
@@ -235,7 +239,11 @@ def test_SAUCIE_is_picklable():
     assert str(obj) == str(obj2)
 
 
-def test_SAUCIE_batches_is_picklable():
+def test_SAUCIE_batches_is_exportable():
+    """
+    test if SAUCIE batch transformer can be exported
+    with joblib
+    """
     obj = SAUCIE_batches()
     with io.BytesIO() as f:
         joblib.dump(obj, f)
@@ -244,7 +252,11 @@ def test_SAUCIE_batches_is_picklable():
     assert str(obj) == str(obj2)
 
 
-def test_SAUCIE_pickling_restores_tf_graph():
+def test_SAUCIE_exporting_restores_tf_graph():
+    """
+    test if SAUCIE classifier and transformer can be exported
+    with joblib, preserving the model weights
+    """
     data = data_saucie()
     saucie = SAUCIE_labels(epochs=2, lr=1e-6, normalize=True, random_state=42)
     saucie.fit(data)
@@ -263,7 +275,11 @@ def test_SAUCIE_pickling_restores_tf_graph():
     np.testing.assert_array_equal(encoded1, encoded2)
 
 
-def test_SAUCIE_batches_pickling_restores_tf_graph():
+def test_SAUCIE_batches_exporting_restores_tf_graph():
+    """
+    test if SAUCIE batch transformer can be exported
+    with joblib, preserving the model weights
+    """
     data = data_saucie()
     batches = data_batches()
     saucie = SAUCIE_batches(epochs=2, lr=1e-9, normalize=True, random_state=42)
