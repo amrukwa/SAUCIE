@@ -78,6 +78,7 @@ if __name__ == "__main__":
 
             if model_batches is not None:
                 with st.spinner("Performing batch correction"):
+                    # set up batch training
                     model_batches.fit(data, batches)
                     cleaned_data = model_batches.transform(data, batches)
                 batched = True
