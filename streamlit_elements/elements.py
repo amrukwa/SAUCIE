@@ -1,7 +1,6 @@
-import io
-
-import joblib
 import streamlit as st
+
+from streamlit_elements.download_button import download_button
 
 
 def display_buttons(labels, dim_red,
@@ -11,46 +10,31 @@ def display_buttons(labels, dim_red,
     """
     col1, col2 = st.columns([0.4, 1], gap="small")
 
-    col1.download_button("Download labels ",
-                         labels,
-                         file_name="labels.csv",
-                         mime='text/csv')
-
-    col2.download_button("Download model",
-                         model,
-                         file_name="model.joblib",
-                         help="""Download model for clustering
-                          and dimensionality reduction""",
-                         mime='application/octet-stream')
-
-    col1.download_button("Download embedding",
-                         dim_red,
-                         file_name="reduced_data.csv",
-                         mime='text/csv')
-
-    if model_batch is not None:
-        col2.download_button("Download model - batches",
-                             model_batch,
-                             file_name="model_batches.joblib",
-                             help="""Download model for batch correction
-                              and data cleaning""",
-                             mime='application/octet-stream')
-
-        col1.download_button("Download cleaned data",
-                             cleaned,
-                             file_name="cleaned_data.csv",
-                             mime='text/csv')
-
-
-@st.cache
-def dump_model(model):
-    """
-    export joblib model for downloading
-    """
-    f = io.BytesIO()
-    joblib.dump(model, f)
-    f.seek(0)
-    return f
+    with col1:
+        download_labels = download_button(labels, "labels.csv",
+                                          'Download labels',
+                                          pickle_it=False)
+        st.markdown(download_labels, unsafe_allow_html=True)
+        download_dim_red = download_button(dim_red, "reduced_data.csv",
+                                           'Download embedding',
+                                           pickle_it=False)
+        st.markdown(download_dim_red, unsafe_allow_html=True)
+        if model_batch is not None:
+            download_cleaned = download_button(cleaned, "cleaned_data.csv",
+                                               'Download cleaned data',
+                                               pickle_it=False)
+            st.markdown(download_cleaned, unsafe_allow_html=True)
+    with col2:
+        download_model = download_button(model, "model.pickle",
+                                         'Download model',
+                                         pickle_it=True)
+        st.markdown(download_model, unsafe_allow_html=True)
+        if model_batch is not None:
+            download_model_b = download_button(model_batch,
+                                               "model_batches.pickle",
+                                               'Download model  - batches',
+                                               pickle_it=True)
+            st.markdown(download_model_b, unsafe_allow_html=True)
 
 
 @st.cache

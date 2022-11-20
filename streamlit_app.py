@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 
 from saucie.saucie import SAUCIE_batches, SAUCIE_labels
-from streamlit_elements.elements import convert_df, display_buttons, dump_model
+from streamlit_elements.elements import convert_df, display_buttons
 from streamlit_elements.figures import prepare_figure
 from streamlit_elements.scores import display_scores
 
@@ -94,12 +94,10 @@ if __name__ == "__main__":
             st.plotly_chart(fig, use_container_width=True)
 
             display_scores(cleaned_data, embedded, labels, ground_truth)
-            saucie_download = dump_model(saucie)
             labels_csv = convert_df(pd.DataFrame(labels))
             embedded_csv = convert_df(pd.DataFrame(embedded))
             if model_batches is not None:
-                model_batches = dump_model(model_batches)
                 cleaned_data = convert_df(pd.DataFrame(cleaned_data))
             # labels, embedding, model, cleaned data, model for batches
-            display_buttons(labels_csv, embedded_csv, saucie_download,
+            display_buttons(labels_csv, embedded_csv, saucie,
                             cleaned_data, model_batches)
