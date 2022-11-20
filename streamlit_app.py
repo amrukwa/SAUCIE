@@ -45,7 +45,11 @@ if __name__ == "__main__":
                     If none, select "No batches" and submit.
                     """,
                 )
-            normalize = st.checkbox('Normalize my data', value=True)
+            normalize = st.checkbox('Normalize my data', value=True,
+                                    help="""Unless you are absolutely sure
+                                     your data is already normalized and is
+                                      not unbalanced,
+                                      do not skip normalization.""")
             submit_button = st.form_submit_button(label="Submit")
 
         if submit_button:
@@ -65,15 +69,20 @@ if __name__ == "__main__":
                 ground_truth = data[[label_select]].to_numpy()
                 ground_truth = ground_truth.flatten()
                 data.drop(columns=label_select, inplace=True)
-
+            # keep colnames and rownames for download
+            indexes = data.index.tolist()
+            columns = data.columns.tolist()
+            # convert data
             data = data.to_numpy()
             data = data.astype(float)
 
             if model_batches is not None:
-                model_batches.fit(data, batches)
-                # fit transform for batches
-                cleaned_data = model_batches.transform(data, batches)
+                with st.spinner("Performing batch correction"):
+                    model_batches.fit(data, batches)
+                    cleaned_data = model_batches.transform(data, batches)
+                batched = True
             else:
+                batched = False
                 if normalize:
                     data = (data - np.min(data, axis=0))
                     data = data/np.max(data, axis=0)
@@ -86,18 +95,23 @@ if __name__ == "__main__":
                                    batch_size=256, shuffle=True)
             with st.spinner("Training the model"):
                 saucie.fit(cleaned_data)
-            embedded = saucie.transform(cleaned_data)
-            labels = saucie.predict(cleaned_data)
-            fig = prepare_figure(embedded[:, 0], embedded[:, 1],
-                                 labels, ground_truth)
-
+            with st.spinner("Calculating the results"):
+                embedded = saucie.transform(cleaned_data)
+                labels = saucie.predict(cleaned_data)
+            with st.spinner("Preparing the plot"):
+                fig = prepare_figure(embedded[:, 0], embedded[:, 1],
+                                     labels, ground_truth)
             st.plotly_chart(fig, use_container_width=True)
 
             display_scores(cleaned_data, embedded, labels, ground_truth)
-            labels_csv = convert_df(pd.DataFrame(labels))
-            embedded_csv = convert_df(pd.DataFrame(embedded))
-            if model_batches is not None:
-                cleaned_data = convert_df(pd.DataFrame(cleaned_data))
+            labels_csv = convert_df(pd.DataFrame(labels, index=indexes,
+                                                 columns=["label"]))
+            embedded_csv = convert_df(pd.DataFrame(embedded, index=indexes,
+                                                   columns=["SAUCIE1",
+                                                            "SAUCIE2"]))
+            if batched:
+                cleaned_data = convert_df(pd.DataFrame(cleaned_data,
+                                          index=indexes, columns=columns))
             # labels, embedding, model, cleaned data, model for batches
-            display_buttons(labels_csv, embedded_csv, saucie,
-                            cleaned_data, model_batches)
+            display_buttons(labels_csv, embedded_csv,
+                            cleaned_data, batched)

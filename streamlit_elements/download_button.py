@@ -1,15 +1,9 @@
 import base64
-import json
-import pickle
 import re
 import uuid
 
-import pandas as pd
-import streamlit as st
 
-
-def download_button(object_to_download, download_filename, button_text,
-                    pickle_it=False):
+def download_button(object_to_download, download_filename, button_text):
     """
     Generates a link to download the given object_to_download.
     Params:
@@ -20,7 +14,6 @@ def download_button(object_to_download, download_filename, button_text,
     link.
     button_text (str): Text to display on download button
     (e.g. 'click here to download file')
-    pickle_it (bool): If True, pickle file.
     Returns:
     -------
     (str): the anchor tag to download object_to_download
@@ -29,24 +22,6 @@ def download_button(object_to_download, download_filename, button_text,
     download_link(your_df, 'YOUR_DF.csv', 'Click to download data!')
     download_link(your_str, 'YOUR_STRING.txt', 'Click to download text!')
     """
-    if pickle_it:
-        try:
-            object_to_download = pickle.dumps(object_to_download)
-        except pickle.PicklingError as e:
-            st.write(e)
-            return None
-
-    else:
-        if isinstance(object_to_download, bytes):
-            pass
-
-        elif isinstance(object_to_download, pd.DataFrame):
-            object_to_download = object_to_download.to_csv(index=False)
-
-        # Try JSON encode for everything else
-        else:
-            object_to_download = json.dumps(object_to_download)
-
     try:
         # some strings <-> bytes conversions necessary here
         b64 = base64.b64encode(object_to_download.encode()).decode()
