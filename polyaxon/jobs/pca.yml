@@ -24,6 +24,12 @@ outputs:
   - name: reduced_dims
     type: artifacts
     description: PCA dimensionality reduction
+- name: original_ratios
+    type: artifacts
+    description: Mixing ratios in the dataset space
+- name: reduced_ratios
+    type: artifacts
+    description: Mixing ratios in the latent space
   
 run:
   kind: job
