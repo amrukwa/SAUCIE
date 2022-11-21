@@ -13,7 +13,7 @@ runPatch:
   init:
     - git:
         url: https://github.com/amrukwa/SAUCIE
-        revision: 667490c742df65ccc23d8b1b2f4f0cb5c896b016
+        revision: a7f4a19d0946ef1f0fc5c07bc696005f1c7fcd08
       connection: repo
 hubRef: kiiaed/build
 component:
