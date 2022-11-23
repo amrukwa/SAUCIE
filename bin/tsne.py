@@ -23,8 +23,8 @@ def path(file):
 def model(X):
     transformer_pca = PCA(100).fit(X)
     results = transformer_pca.transform(X)
-    transformer_tsne = TSNE(2).fit(X)
-    results = transformer_tsne.transform(results)
+    transformer_tsne = TSNE(2)
+    results = transformer_tsne.fit_transform(results)
     return transformer_pca, transformer_tsne, results
 
 
