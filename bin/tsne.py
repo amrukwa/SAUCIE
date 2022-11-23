@@ -4,7 +4,8 @@ import pickle
 
 import numpy as np
 from polyaxon.tracking import Run
-from sklearn.decomposition import PCA, TSNE
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
 from sklearn.metrics import silhouette_score
 
 import metrics.dim_reduction as dim_red
