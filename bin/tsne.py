@@ -4,7 +4,7 @@ import pickle
 
 import numpy as np
 from polyaxon.tracking import Run
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, TSNE
 from sklearn.metrics import silhouette_score
 
 import metrics.dim_reduction as dim_red
@@ -20,9 +20,11 @@ def path(file):
 
 
 def model(X):
-    transformer = PCA(2).fit(X)
-    results = transformer.transform(X)
-    return transformer, results
+    transformer_pca = PCA(100).fit(X)
+    results = transformer_pca.transform(X)
+    transformer_tsne = TSNE(2).fit(X)
+    results = transformer_tsne.transform(results)
+    return transformer_pca, transformer_tsne, results
 
 
 def load_data(fname):
@@ -46,7 +48,7 @@ y = load_data(args.true_labels)
 experiment.log_data_ref('dataset_X', content=X)
 experiment.log_data_ref('dataset_y', content=y)
 
-transformer, results = model(X=X)
+transformer_pca, transformer_tsne, results = model(X=X)
 silhouette = silhouette_score(results, y)
 original_ratios, _ = dim_red.frac_unique_neighbors(X, y, 2)
 ratios, _ = dim_red.frac_unique_neighbors(results, y, 2)
@@ -61,11 +63,15 @@ experiment.log_metrics(reduced_mixing_ratio=np.mean(ratios))
 experiment.log_metrics(amb_var=np.mean(var[0]))
 experiment.log_metrics(sub_var=np.mean(var[1]))
 
-outpath = os.path.join(experiment.get_outputs_path(), 'model.pkl')
+outpath = os.path.join(experiment.get_outputs_path(), 'model_pca.pkl')
 with (open(outpath, 'wb')) as outfile:
-    pickle.dump(transformer, outfile)
+    pickle.dump(transformer_pca, outfile)
 
-result_path = os.path.join(experiment.get_outputs_path(), 'pca.csv')
+outpath = os.path.join(experiment.get_outputs_path(), 'model_tsne.pkl')
+with (open(outpath, 'wb')) as outfile:
+    pickle.dump(transformer_tsne, outfile)
+
+result_path = os.path.join(experiment.get_outputs_path(), 'tsne.csv')
 with (open(result_path, 'wb')) as outfile:
     np.savetxt(outfile, results, delimiter=",")
 
@@ -81,6 +87,6 @@ with (open(result_path, 'wb')) as outfile:
 
 experiment.log_model(
     outpath,
-    name='PCA model',
+    name='t-SNE model',
     framework='sklearn'
 )
