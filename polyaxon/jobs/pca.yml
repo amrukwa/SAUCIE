@@ -39,6 +39,7 @@ run:
   container:
     image: quay.io/kiiaed/saucie:build
     workingDir: '{{ globals.artifacts_path }}/repo'
+    imagePullPolicy: Always
     command:
     - python
     args:

@@ -6,8 +6,6 @@ WORKDIR /code
 
 RUN apt-get update &&\
     apt-get install -y \
-        libgomp1 \
-        gcc \
         curl \
         git \
         ssh &&\
