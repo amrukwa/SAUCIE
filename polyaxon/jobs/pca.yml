@@ -4,7 +4,7 @@ kind: component
 tags: 
   - pca
   - metrics
-name: pca_test_run
+name: pca_test_metrics
 
 # more here: https://polyaxon.com/docs/core/specification/io/
 inputs:

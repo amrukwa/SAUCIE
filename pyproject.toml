@@ -17,6 +17,7 @@ networkx = "^2.8.8"
 attrs = "^22.1.0"
 astunparse = "1.6.3"
 polyaxon = "^1.20.0"
+scikit-network = "^0.28.1"
 
 [tool.poetry.dev-dependencies]
 tensorflow = "^2.10.1"
