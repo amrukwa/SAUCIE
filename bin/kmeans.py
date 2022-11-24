@@ -45,6 +45,8 @@ def load_data(fname):
 parser = argparse.ArgumentParser()
 parser.add_argument('--data', type=path, default="")
 parser.add_argument('--true_labels', type=path, default="")
+parser.add_argument('--min_clusters', type=int, default=2)
+parser.add_argument('--max_clusters', type=int, default=20)
 args = parser.parse_args()
 
 X = load_data(args.data).T
