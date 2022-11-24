@@ -8,6 +8,8 @@ from sklearn.metrics import adjusted_rand_score, silhouette_score
 from sklearn.neighbors import kneighbors_graph
 from sknetwork.clustering import Louvain
 
+from metrics.dunn import dunn_index
+
 # Polyaxon
 experiment = Run()
 
@@ -51,10 +53,11 @@ experiment.log_data_ref('dataset_y', content=y)
 estimator, labels = model(X, n_neighbors)
 silhouette_labels = silhouette_score(X, labels)
 ari = adjusted_rand_score(y, labels)
-
+dunn = dunn_index(X, labels, 'euclidean', None)
 
 experiment.log_metrics(silhouette_score_labels=silhouette_labels)
 experiment.log_metrics(n_clusters=np.unique(labels).shape[0])
+experiment.log_metrics(dunn_idx=dunn)
 experiment.log_metrics(ari=ari)
 
 outpath = os.path.join(experiment.get_outputs_path(), 'model.pkl')
