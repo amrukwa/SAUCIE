@@ -23,11 +23,13 @@ def model(X, k_min, k_max):
     estimator = KMeans(k_min).fit(X)
     labels = estimator.predict(X)
     dunn = dunn_index(X, labels, 'euclidean', estimator.cluster_centers_)
+    experiment.log_metrics(dunn_idx=dunn)
     for i in range(k_min+1, k_max+1):
         new_estimator = KMeans(i).fit(X)
         new_labels = new_estimator.predict(X)
         new_dunn = dunn_index(X, new_labels, 'euclidean',
                               new_estimator.cluster_centers_)
+        experiment.log_metrics(dunn_idx=new_dunn)
         if new_dunn > dunn:
             dunn = new_dunn
             labels = new_labels

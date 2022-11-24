@@ -7,6 +7,7 @@ from polyaxon.tracking import Run
 from sklearn.metrics import adjusted_rand_score, silhouette_score
 
 import metrics.dim_reduction as dim_red
+from metrics.dunn import dunn_index
 from saucie.saucie import SAUCIE_labels
 
 # Polyaxon
@@ -57,6 +58,7 @@ estimator, embed, labels = model(X=X)
 silhouette_embed = silhouette_score(embed, y)
 silhouette_labels = silhouette_score(X, labels)
 ari = adjusted_rand_score(y, labels)
+dunn = dunn_index(X, labels, 'euclidean', None)
 original_ratios, _ = dim_red.frac_unique_neighbors(X, y, 2)
 ratios, _ = dim_red.frac_unique_neighbors(embed, y, 2)
 
@@ -67,6 +69,7 @@ var = dim_red.get_variances(sub_mat, sub_lat)
 experiment.log_metrics(silhouette_score_embed=silhouette_embed)
 experiment.log_metrics(silhouette_score_labels=silhouette_labels)
 experiment.log_metrics(n_clusters=np.unique(labels).shape[0])
+experiment.log_metrics(dunn_idx=dunn)
 experiment.log_metrics(ari=ari)
 experiment.log_metrics(original_mixing_ratio=np.mean(original_ratios))
 experiment.log_metrics(reduced_mixing_ratio=np.mean(ratios))
