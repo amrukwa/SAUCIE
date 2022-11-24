@@ -20,6 +20,6 @@ ENV PATH="${POETRY_HOME}/bin:${PATH}"
 
 COPY . /app
 RUN poetry config virtualenvs.create false &&\
-    poetry install
+    poetry install --without dev, test
 
 ENTRYPOINT ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]

@@ -16,6 +16,6 @@ ENV PATH="${POETRY_HOME}/bin:${PATH}"
 
 COPY pyproject.toml poetry.lock /code/
 RUN poetry config virtualenvs.create false &&\
-    poetry install
+    poetry install --without deploy
 
 WORKDIR /plx-context/artifacts
