@@ -4,8 +4,8 @@ import pickle
 
 import numpy as np
 from polyaxon.tracking import Run
-from sklearn.neighbors import kneighbors_graph
 from sklearn.metrics import adjusted_rand_score, silhouette_score
+from sklearn.neighbors import kneighbors_graph
 from sknetwork.clustering import Louvain
 
 # Polyaxon
