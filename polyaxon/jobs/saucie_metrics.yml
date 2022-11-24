@@ -1,0 +1,54 @@
+---
+version: 1.1
+kind: component
+tags: 
+  - saucie
+  - metrics
+name: saucie_test_metrics
+
+# more here: https://polyaxon.com/docs/core/specification/io/
+inputs:
+  - name: data
+    type: path
+    value: /data/gluster/saucie/PBMC/pbmc_filtered.npy
+    isOptional: true
+  - name: true_labels
+    type: path
+    value: /data/gluster/saucie/PBMC/true_labels.npy
+    isOptional: true
+
+outputs:
+  - name: model
+    type: artifacts
+    description: SAUCIE model
+  - name: reduced_dims
+    type: artifacts
+    description: SAUCIE dimensionality reduction
+  - name: labels
+    type: artifacts
+    description: SAUCIE clustering
+  - name: original_ratios
+    type: artifacts
+    description: Mixing ratios in the dataset space
+  - name: reduced_ratios
+    type: artifacts
+    description: Mixing ratios in the latent space
+  
+run:
+  kind: job
+  connections:
+      - cache
+      - data
+  container:
+    image: quay.io/kiiaed/saucie:build
+    workingDir: '{{ globals.artifacts_path }}/repo'
+    imagePullPolicy: Always
+    command:
+    - python
+    args:
+    - -m
+    - bin.saucie_metrics
+    - --data
+    - "{{ data }}"
+    - --true_labels
+    - "{{ true_labels }}"
