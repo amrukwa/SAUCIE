@@ -4,7 +4,7 @@ import pickle
 
 import numpy as np
 from polyaxon.tracking import Run
-from sklearn.metrics import silhouette_score, adjusted_rand_score
+from sklearn.metrics import adjusted_rand_score, silhouette_score
 
 import metrics.dim_reduction as dim_red
 from saucie.saucie import SAUCIE_labels

@@ -2,11 +2,12 @@
 version: 1.1
 kind: component
 tags: 
-  - umap
+  - kmeans
   - metrics
-name: umap_test_metrics
+name: kmeans_test_metrics
 presets:
   - default
+  - gpu
 queue: cpu_medium
 
 # more here: https://polyaxon.com/docs/core/specification/io/
@@ -19,23 +20,22 @@ inputs:
     type: path
     value: /data/gluster/saucie/PBMC/true_labels.npy
     isOptional: true
+  - name: min_clusters
+    type: int
+    value: 2
+    isOptional: true
+  - name: max_clusters
+    type: int
+    value: 20
+    isOptional: true
 
 outputs:
   - name: model
     type: artifacts
-    description: PCA model
-  - name: model
+    description: k-means model
+  - name: labels
     type: artifacts
-    description: UMAP model
-  - name: reduced_dims
-    type: artifacts
-    description: UMAP dimensionality reduction
-  - name: original_ratios
-    type: artifacts
-    description: Mixing ratios in the dataset space
-  - name: reduced_ratios
-    type: artifacts
-    description: Mixing ratios in the latent space
+    description: k-means clustering
   
 run:
   kind: job
@@ -50,8 +50,12 @@ run:
     - python
     args:
     - -m
-    - bin.umap
+    - bin.kmeans
     - --data
     - "{{ data }}"
     - --true_labels
     - "{{ true_labels }}"
+    - --min_clusters
+    - "{{ min_clusters }}"
+    - --max_clusters
+    - "{{ max_clusters }}"
