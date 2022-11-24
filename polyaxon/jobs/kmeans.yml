@@ -7,7 +7,6 @@ tags:
 name: kmeans_test_metrics
 presets:
   - default
-  - gpu
 queue: cpu_medium
 
 # more here: https://polyaxon.com/docs/core/specification/io/
