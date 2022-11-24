@@ -21,12 +21,12 @@ def path(file):
 
 def model(X, k_min, k_max):
     estimator = AgglomerativeClustering(k_min).fit(X)
-    labels = estimator.predict(X)
+    labels = estimator.labels_
     dunn = dunn_index(X, labels, 'euclidean', None)
     experiment.log_metrics(dunn_idx=dunn)
     for i in range(k_min+1, k_max+1):
         new_estimator = AgglomerativeClustering(i).fit(X)
-        new_labels = new_estimator.predict(X)
+        new_labels = new_estimator.labels_
         new_dunn = dunn_index(X, new_labels, 'euclidean',
                               None)
         experiment.log_metrics(dunn_idx=new_dunn)
