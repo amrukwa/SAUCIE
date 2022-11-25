@@ -92,7 +92,8 @@ if __name__ == "__main__":
                     cleaned_data = data
 
             # fit on the cleaned data -> labels, embed
-            saucie = SAUCIE_labels(epochs=100, lr=1e-4, normalize=False,
+            saucie = SAUCIE_labels(epochs=150, lr=1e-4, normalize=False,
+                                   lambda_c=0.1, lambda_d=0.2,
                                    batch_size=256, shuffle=True)
             with st.spinner("Training the model"):
                 saucie.fit(cleaned_data)

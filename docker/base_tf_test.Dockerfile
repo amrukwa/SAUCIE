@@ -1,6 +1,4 @@
-FROM python:3.8-slim AS base
-
-EXPOSE 8501
+FROM python:3.8-slim AS builder
 
 ENV PYTHONUNBUFFERED TRUE
 RUN mkdir -p /root/.config/matplotlib &&\
@@ -18,8 +16,9 @@ ENV POETRY_HOME="/opt/poetry"
 RUN curl -sSL https://install.python-poetry.org | python -
 ENV PATH="${POETRY_HOME}/bin:${PATH}"
 
-COPY . /app
+COPY pyproject.toml poetry.lock streamlit_app.py streamlit_elements saucie /app/
 RUN poetry config virtualenvs.create false &&\
-    poetry install --without dev, test
+    poetry install --without dev,test
 
+EXPOSE 8501
 ENTRYPOINT ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
