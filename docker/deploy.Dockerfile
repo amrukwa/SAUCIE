@@ -29,10 +29,10 @@ RUN poetry export -f requirements.txt --output requirements.txt \
     --without dev,test --with deploy
 RUN /venv/bin/pip install -r requirements.txt
 
-COPY . .
+COPY saucie ./
 RUN poetry build && /venv/bin/pip install dist/*.whl
 
-FROM base as final
+FROM base as dev
 
 COPY --from=builder /venv /venv
 COPY docker-entrypoint.sh streamlit_app.py ./
