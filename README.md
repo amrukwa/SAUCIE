@@ -13,7 +13,7 @@ The other recommended way to use this software is through Docker. This is the se
 To install latest stable version use:  
 ```
 docker pull amrukwa/saucie
-````  
+``` 
 ### From the source repository
 If you just want to use the methods and not the application itself, you can do so.
 ```
