@@ -15,11 +15,7 @@ ENV PIP_DEFAULT_TIMEOUT=100 \
 
 RUN apt-get update &&\
     apt-get install -y \
-        libgomp1 \
-        gcc \
-        curl \
-        git \
-        ssh &&\
+        gcc &&\
     rm -rf /var/lib/apt/lists/*
 RUN pip install "poetry==$POETRY_VERSION"
 RUN python -m venv /venv
