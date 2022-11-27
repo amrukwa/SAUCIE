@@ -21,7 +21,7 @@ git clone https://github.com/amrukwa/SAUCIE.git
 ```
 After creating your virtualenv, you can install all the dependencies and build the project using poetry. If you just want to use the basic functionalities, run the following command:
 ```
-poetry install --without dev
+poetry install --only main
 ```
 The dev group of the dependencies consists of the packages that were used for comparison of the results. You may want to leave them out to keep the environment lighter.  
 For the application, if you don't want to use docker, you can run:
