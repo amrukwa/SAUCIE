@@ -32,6 +32,7 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
         :param normalize: whether to normalize the data
         :param random_state: the random state to initialize the model
                             layers with
+        :param callback: list of tensorflow callbacks to use for the model
         """
         self.lambda_b = lambda_b
         self.lr = lr
@@ -125,6 +126,7 @@ class SAUCIE_labels(BaseEstimator, ClusterMixin, TransformerMixin):
         :param normalize: whether to normalize the data
         :param random_state: the random state to initialize the model
                             layers with
+        :param callback: list of tensorflow callbacks to use for the model
         """
         self.lambda_c = lambda_c
         self.lambda_d = lambda_d
