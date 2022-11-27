@@ -57,4 +57,4 @@ encoded = saucie.transform(data)
 labels = saucie.predict(data)
 ```
 ***  
-More info about the parameters of the estimators can be found in the 'saucie/saucie.py' file.
+More info about the parameters of the estimators can be found in the `saucie/saucie.py` file.
