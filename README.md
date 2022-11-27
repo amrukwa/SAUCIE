@@ -6,13 +6,35 @@ The code used for measuring the goodness of the dimensionality reduction can be 
 
 
 ## Usage
-### Docker
-The project is dockerized. You can use `base_tf_test.Dockerfile` to build an image. If you want to use the interactive streamlit application, run the container with `-p 8501:8501`.
-### From the source repository
-TBA
-### Package
-TBA
 ### On remote server
+If you don't want to download and install anything, the deployed application is available [here]().
+### Docker
+The other recommended way to use this software is through Docker. This is the second most convenient way, if you want to use saucie application.  
+To install latest stable version use:  
+```
+docker pull amrukwa/saucie
+````  
+### From the source repository
+If you just want to use the methods and not the application itself, you can do so.
+```
+git clone https://github.com/amrukwa/SAUCIE.git
+```
+After creating your virtualenv, you can install all the dependencies and build the project using poetry. If you just want to use the basic functionalities, run the following command:
+```
+poetry install --without dev
+```
+The dev group of the dependencies consists of the packages that were used for comparison of the results. You may want to leave them out to keep the environment lighter.  
+For the application, if you don't want to use docker, you can run:
+```
+poetry install --without dev, test --with deploy
+```
+Streamlit application can be started this way:
+```
+streamlit run streamlit_app.py
+```
+The application will be started on default streamlit port: 8501.
+
+### Package
 TBA
 
 ## The modules
