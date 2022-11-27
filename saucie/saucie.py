@@ -19,7 +19,9 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
                  batch_size=128,
                  verbose="auto",
                  normalize=False,
-                 random_state=None):
+                 random_state=None,
+                 callback=[EarlyStopping(monitor='loss', patience=5,
+                                         restore_best_weights=True)]):
         """
         :param lambda_b: the coefficient for the MMD regularization
         :param lr: the learning rate for the model training
@@ -40,10 +42,9 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
         self.normalize = normalize
         self.random_state = random_state
         self.history = []
+        self.callback = callback
 
     def fit(self, X, y=None):
-        self.callback = EarlyStopping(monitor='loss', patience=5,
-                                      restore_best_weights=True)
         self.layers[3] = 2
         if y is None:
             y = np.zeros(X.shape[0])
@@ -87,7 +88,7 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
                                      y=None,
                                      epochs=self.epochs,
                                      batch_size=self.batch_size,
-                                     callbacks=[self.callback],
+                                     callbacks=self.callback,
                                      shuffle=True,
                                      verbose=self.verbose
                                      )]
@@ -109,7 +110,9 @@ class SAUCIE_labels(BaseEstimator, ClusterMixin, TransformerMixin):
                  shuffle="batch",
                  verbose="auto",
                  normalize=False,
-                 random_state=None):
+                 random_state=None,
+                 callback=[EarlyStopping(monitor='loss', patience=5,
+                                         restore_best_weights=True)]):
         """
         :param lambda_c: the coefficient for the ID regularization
         :param lambda_d: the coefficient for the intracluster
@@ -133,10 +136,9 @@ class SAUCIE_labels(BaseEstimator, ClusterMixin, TransformerMixin):
         self.verbose = verbose
         self.normalize = normalize
         self.random_state = random_state
+        self.callback = callback
 
     def fit(self, X, y=None):
-        self.callback = EarlyStopping(monitor='loss', patience=5,
-                                      restore_best_weights=True)
         self.layers[3] = 2
         ncol = X.shape[1]
         if self.normalize:
@@ -159,7 +161,7 @@ class SAUCIE_labels(BaseEstimator, ClusterMixin, TransformerMixin):
                                     y=None,
                                     epochs=self.epochs,
                                     batch_size=self.batch_size,
-                                    callbacks=[self.callback],
+                                    callbacks=self.callback,
                                     shuffle=self.shuffle,
                                     verbose=self.verbose
                                     )
