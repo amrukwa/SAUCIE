@@ -26,7 +26,7 @@ poetry install --without dev
 The dev group of the dependencies consists of the packages that were used for comparison of the results. You may want to leave them out to keep the environment lighter.  
 For the application, if you don't want to use docker, you can run:
 ```
-poetry install --without dev, test --with deploy
+poetry install --without dev,test --with deploy
 ```
 Streamlit application can be started this way:
 ```
