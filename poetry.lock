@@ -236,7 +236,7 @@ gin-config = "*"
 
 [package.source]
 type = "file"
-url = "divae/dist/divae-0.2.0-py3-none-any.whl"
+url = "divae_patch/divae-0.2.0-py3-none-any.whl"
 
 [[package]]
 name = "divik"
@@ -1764,7 +1764,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.9.7 || >3.9.7,<3.11"
-content-hash = "a32efda8905acaa62251b1368f08c63c8f48d03584e240361b3e1e92b8e0960c"
+content-hash = "9934abec5a6859524efa6b48e4e67db41ba61406cee8c63f10379a58a921d9a0"
 
 [metadata.files]
 absl-py = [

@@ -19,7 +19,7 @@ networkx = "^2.8.8"
 scikit-network = "^0.28.1"
 umap-learn = "^0.5.3"
 pytest = "^7.2.0"
-divae = {path = "divae/dist/divae-0.2.0-py3-none-any.whl"}
+divae = {path = "divae_patch/divae-0.2.0-py3-none-any.whl"}
 
 
 [tool.poetry.group.deploy.dependencies]
