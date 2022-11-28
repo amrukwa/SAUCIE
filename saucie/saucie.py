@@ -183,7 +183,7 @@ class SAUCIE_labels(BaseEstimator, ClusterMixin, TransformerMixin):
         labels = labels/labels.max()
         binarized = np.where(labels > 1e-6, 1, 0)
         unique_codes = np.unique(binarized, axis=0)
-        clusters = np.zeros(labels.shape[0])
+        clusters = np.zeros(labels.shape[0], dtype=int)
         for i, code in enumerate(unique_codes):
             clusters[(binarized == code).all(axis=1).nonzero()] = i
         return clusters
