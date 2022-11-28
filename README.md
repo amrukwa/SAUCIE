@@ -14,28 +14,6 @@ To install latest stable version use:
 ```
 docker pull amrukwa/saucie
 ``` 
-### From the source repository
-If you just want to use the methods and not the application itself, you can do so.
-```
-git clone https://github.com/amrukwa/SAUCIE.git
-```
-After creating your virtualenv, you can install all the dependencies and build the project using poetry. If you just want to use the basic functionalities, run the following command:
-```
-poetry install --only main
-```
-The dev group of the dependencies consists of the packages that were used for comparison of the results. You may want to leave them out to keep the environment lighter.  
-For the application, if you don't want to use docker, you can run:
-```
-poetry install --without dev,test --with deploy
-```
-Streamlit application can be started this way:
-```
-streamlit run streamlit_app.py
-```
-The application will be started on default streamlit port: 8501.
-
-### Package
-TBA
 
 ## The modules
 The models (batch correction and dimensionality reduction/clustering versions) are prepared following the scikit-learn estimator standards. This means you can use the models as follow:
