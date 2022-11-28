@@ -20,7 +20,9 @@ RUN apt-get update &&\
 RUN pip install "poetry==$POETRY_VERSION"
 RUN python -m venv /venv
 
+RUN mkdir /app/divae_patch
 COPY pyproject.toml poetry.lock ./
+COPY divae_patch/divae-0.2.0-py3-none-any.whl /app/divae_patch
 RUN poetry export -f requirements.txt --output requirements.txt \
     --without dev,test --with deploy
 RUN /venv/bin/pip install -r requirements.txt
