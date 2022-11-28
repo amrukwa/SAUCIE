@@ -1,0 +1,3 @@
+[submodule "divae"]
+	path = divae
+	url = https://github.com/gmrukwa/divae.git
