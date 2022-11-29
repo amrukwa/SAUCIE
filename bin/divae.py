@@ -27,10 +27,8 @@ def model(X):
                               random_state=42, batch_size=256,
                               verbose=0, shuffle=True),
                       verbose=True, minimal_size=1000, random_state=42)
-    vae = VAE(intermediate_dim=512, latent_dim=2, epochs=100,
-              random_state=42, batch_size=256,
-              verbose=0, shuffle=True).fit(X)
-    embed = vae.transform(X)
+    estimator = estimator.fit(X)
+    embed = estimator.vae.transform(X)
     labels = estimator.predict(X)
     return estimator, embed, labels
 
