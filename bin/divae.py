@@ -23,10 +23,14 @@ def path(file):
 def model(X):
     estimator = DiVAE(auto_gmm=AutoGMM(max_clusters=20, random_state=42,
                                        method="youden"),
-                      vae=VAE(intermediate_dim=512, latent_dim=2, epochs=500,
-                              batch_size=256, verbose=0, shuffle=True),
+                      vae=VAE(intermediate_dim=512, latent_dim=2, epochs=100,
+                              random_state=42, batch_size=256,
+                              verbose=0, shuffle=True),
                       verbose=True, minimal_size=1000, random_state=42)
-    embed = estimator.vae.transform(X)
+    vae = VAE(intermediate_dim=512, latent_dim=2, epochs=100,
+              random_state=42, batch_size=256,
+              verbose=0, shuffle=True).fit(X)
+    embed = vae.transform(X)
     labels = estimator.predict(X)
     return estimator, embed, labels
 
