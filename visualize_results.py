@@ -3,6 +3,7 @@ import os
 
 import numpy as np
 import pandas as pd
+from scipy.stats import f_oneway, tukey_hsd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -24,6 +25,7 @@ def plot_mixing_ratios(files, folder=""):
         ratios = np.genfromtxt(folder+subfolder+files[i]+".csv", delimiter=',')
         fig.add_trace(go.Box(y=ratios, name=name))
     fig.update_layout(height=400, width=700,
+                      margin=dict(l=5, r=5, b=5, t=5),
                       showlegend=False,
                       template="simple_white",
                       font_family="Computer Modern",
@@ -81,6 +83,7 @@ def plot_clustering(embed_file, files, folder=""):
                               main_col=showlegend)
     fig.update_layout(
         height=1000, width=1200,
+        margin=dict(l=5, r=5, b=5, t=10),
         template="simple_white",
         font_family="Computer Modern",
         title_font_family="Computer Modern")
@@ -117,6 +120,7 @@ def plot_dim_red(cluster_file, files, folder=""):
                               col=j, row=i, showlegend=showlegend)
     fig.update_layout(
         height=1000, width=1200,
+        margin=dict(l=5, r=5, b=5, t=30),
         template="simple_white",
         font_family="Computer Modern",
         title_font_family="Computer Modern")
@@ -125,6 +129,21 @@ def plot_dim_red(cluster_file, files, folder=""):
                                   xanchor="left",
                                   x=0.55))
     fig.write_image(folder+"images/dim_red_scatter.png")
+
+
+def compare_distributions(files, folder=""):
+    print(files)
+    subfolder = "data_plots/ratios/"
+    original = np.genfromtxt(folder+subfolder+files[0]+".csv", delimiter=',')
+    saucie = np.genfromtxt(folder+subfolder+files[1]+".csv", delimiter=',')
+    divae = np.genfromtxt(folder+subfolder+files[2]+".csv", delimiter=',')
+    pca = np.genfromtxt(folder+subfolder+files[3]+".csv", delimiter=',')
+    umap = np.genfromtxt(folder+subfolder+files[4]+".csv", delimiter=',')
+    tsne = np.genfromtxt(folder+subfolder+files[5]+".csv", delimiter=',')
+    pval = f_oneway(original, saucie, divae, pca, umap, tsne).pvalue
+    print('{0:.16f}'.format(pval))
+    if pval < 0.05:
+        print(tukey_hsd(original, saucie, divae, pca, umap, tsne))
 
 
 if __name__ == '__main__':
@@ -140,6 +159,7 @@ if __name__ == '__main__':
                      "tsne"]
     args = parser.parse_args()
     folder = args.folder
+    compare_distributions(files_ratio, folder)
     plot_mixing_ratios(files_ratio, folder)
     plot_clustering(files_dim_red[0], files_cluster, folder)
     plot_dim_red(files_cluster[0], files_dim_red, folder)
