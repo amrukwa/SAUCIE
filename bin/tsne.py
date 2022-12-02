@@ -54,8 +54,9 @@ silhouette = silhouette_score(results, y)
 original_ratios, _ = dim_red.frac_unique_neighbors(X, y, 2)
 ratios, _ = dim_red.frac_unique_neighbors(results, y, 2)
 
-sub_mat = np.squeeze(X[np.where(y == 3), :])
-sub_lat = np.squeeze(results[np.where(y == 3), :])
+sub_label = dim_red.get_optimal_label(X, y)
+sub_mat = np.squeeze(X[np.where(y == sub_label), :])
+sub_lat = np.squeeze(results[np.where(y == sub_label), :])
 var = dim_red.get_variances(sub_mat, sub_lat)
 
 experiment.log_metrics(silhouette_score=silhouette)
