@@ -1,11 +1,15 @@
+# pull base image from dockerhub
 FROM python:3.8-slim as base
 
+# set environment variables and working direcotry for both stages
+# streamlit applications cannot be run from the root directory of Linux distribution
 ENV PYTHONFAULTHANDLER=1 \
     PYTHONHASHSEED=random \
     PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
+# prepare the first stage for building and installing dependencies
 FROM base as builder
 
 ENV PIP_DEFAULT_TIMEOUT=100 \
@@ -30,6 +34,9 @@ RUN /venv/bin/pip install -r requirements.txt
 COPY saucie ./
 RUN poetry build && /venv/bin/pip install dist/*.whl
 
+# prepare second build stage for copying dependencies from builder
+# copy the application files
+# run the streamlit application
 FROM base as dev
 
 COPY --from=builder /venv /venv
