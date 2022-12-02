@@ -1,0 +1,74 @@
+---
+version: 1.1
+kind: component
+tags: 
+  - data_engineering
+  - filter
+name: prepare_data
+presets:
+  - default
+queue: cpu_medium
+
+# more here: https://polyaxon.com/docs/core/specification/io/
+inputs:
+  - name: data
+    type: path
+    value: /data/gluster/saucie/PBMC/data.csv
+    isOptional: true
+  - name: metadata
+    type: path
+    value: /data/gluster/saucie/PBMC/true_labels.csv
+    isOptional: true
+  - name: label_col
+    type: str
+    value: CellType
+    isOptional: true
+  - name: name_col
+    type: str
+    value: NAME
+    isOptional: true
+  - name: batch_col
+    type: str
+    value: unbatched_data
+    isOptional: true
+
+outputs:
+  - name: variances
+    type: artifacts
+    description: variances across the original dataset
+  - name: filtered_data
+    type: artifacts
+    description: filtered data
+  - name: labels
+    type: artifacts
+    description: true labels
+  - name: batches
+    type: artifacts
+    description: batches numbers
+  - name: overall
+    type: artifacts
+    description: csv file combining data, labels and batches
+  
+run:
+  kind: job
+  connections:
+      - cache
+      - data
+  container:
+    image: quay.io/kiiaed/saucie:build
+    workingDir: '{{ globals.artifacts_path }}/repo'
+    imagePullPolicy: Always
+    command:
+    - python
+    args:
+    - -m
+    - bin.filter
+    - --data
+    - "{{ data }}"
+    - --metadata
+    - "{{ metadata }}"
+    - --label_col
+    - "{{ label_col }}"
+    - --batch_col
+    - "{{ batch_col }}"
+  
