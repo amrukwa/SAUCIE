@@ -57,8 +57,6 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
             X = np.arcsinh(X)
         self.y_ = y[np.where(y == np.unique(y)[0])]
         self._fit_X = X[np.where(y == np.unique(y)[0])]
-        if self.normalize:
-            self._fit_X = np.arcsinh(self._fit_X)
         ncol = X.shape[1]
         saucie_bn = SAUCIE_BN(input_dim=ncol,
                               lambda_b=self.lambda_b,
