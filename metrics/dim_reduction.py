@@ -7,7 +7,9 @@ from sklearn.neighbors import NearestNeighbors
 
 def get_optimal_label(X, y):
     labels, counts = np.unique(y, return_counts=True)
-    closeness = np.abs(counts - 500)
+    closeness = counts - 500
+    up_close = counts[closeness > 0]
+    label = np.where(counts == np.min(up_close))[0][0]
     label = labels[np.argmin(closeness)]
     return label
 
