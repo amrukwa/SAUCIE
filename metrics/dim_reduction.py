@@ -5,6 +5,13 @@ from sklearn.metrics import pairwise_distances
 from sklearn.neighbors import NearestNeighbors
 
 
+def get_optimal_label(X, y):
+    labels, counts = np.unique(y, return_counts=True)
+    closeness = np.abs(counts - 500)
+    label = labels[np.argmin(closeness)]
+    return label
+
+
 def getVar(latent, nodes):
     d = pairwise_distances(latent[nodes, :])
     d = d[d != 0]
