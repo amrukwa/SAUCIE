@@ -67,7 +67,7 @@ if __name__ == "__main__":
             frac = st.slider("""What part of genes with highest
                              variances should
                              remain after filtering""",
-                             0.1, 1.0, 0.2,
+                             0.1, 1.0, 1.0,
                              step=0.05,
                              help="""The genes with zeros only will be
                              removed before filtering.""")
