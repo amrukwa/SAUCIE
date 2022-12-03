@@ -31,7 +31,7 @@ RUN poetry export -f requirements.txt --output requirements.txt \
     --without dev,test --with deploy
 RUN /venv/bin/pip install -r requirements.txt
 
-COPY saucie ./
+COPY saucie/ ./saucie/
 RUN poetry build && /venv/bin/pip install dist/*.whl
 
 # prepare second build stage for copying dependencies from builder
@@ -41,5 +41,6 @@ FROM base as dev
 
 COPY --from=builder /venv /venv
 COPY docker-entrypoint.sh streamlit_app.py ./
-COPY saucie streamlit_elements ./
+# COPY saucie/ ./saucie/
+COPY streamlit_elements/ ./streamlit_elements/
 CMD ["./docker-entrypoint.sh"]
