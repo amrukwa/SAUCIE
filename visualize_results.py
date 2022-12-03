@@ -3,10 +3,10 @@ import os
 
 import numpy as np
 import pandas as pd
-from scipy.stats import f_oneway, tukey_hsd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from scipy.stats import f_oneway, tukey_hsd
 
 
 def path(folder):
@@ -15,22 +15,27 @@ def path(folder):
     raise ValueError(f"Folder not found or not a folder: {folder}")
 
 
+def common_layout_update(fig, height, width, t):
+    fig.update_layout(
+        height=height, width=width,
+        margin=dict(l=5, r=5, b=5, t=t),
+        template="simple_white",
+        font_family="Computer Modern",
+        title_font_family="Computer Modern")
+    return fig
+
+
 def plot_mixing_ratios(files, folder=""):
     np.random.seed(1)
     mixes = ["original", "SAUCIE", "DiVAE",
              "PCA", "PCA + UMAP", "PCA + t-SNE"]
-    subfolder = "data_plots/ratios/"
+    subfolder = "ratios/"
     fig = go.Figure()
     for i, name in enumerate(mixes):
         ratios = np.genfromtxt(folder+subfolder+files[i]+".csv", delimiter=',')
         fig.add_trace(go.Box(y=ratios, name=name))
-    fig.update_layout(height=400, width=700,
-                      margin=dict(l=5, r=5, b=5, t=5),
-                      showlegend=False,
-                      template="simple_white",
-                      font_family="Computer Modern",
-                      title_font_family="Computer Modern")
-    fig.write_image(folder+"images/mixing_ratios_boxplot.png")
+    fig = common_layout_update(fig, 400, 700, t=5)
+    return fig
 
 
 def get_subplot(fig, x, y, labels,
@@ -61,10 +66,10 @@ def plot_clustering(embed_file, files, folder=""):
     clustering_methods = ["Ground truth", "SAUCIE",
                           "DiVAE", "Louvain",
                           "k-means", "hierarchical"]
-    embed = pd.read_csv(folder+"data_plots/embed/"+embed_file+".csv",
+    embed = pd.read_csv(folder+"embed/"+embed_file+".csv",
                         header=None)
     embed = embed.to_numpy().T
-    subfolder = "data_plots/cluster/"
+    subfolder = "cluster/"
 
     fig = make_subplots(rows=nrows, cols=ncols,
                         subplot_titles=clustering_methods,
@@ -81,18 +86,14 @@ def plot_clustering(embed_file, files, folder=""):
             fig = get_subplot(fig, embed[0, :], embed[1, :], labels,
                               col=j, row=i, showlegend=showlegend,
                               main_col=showlegend)
-    fig.update_layout(
-        height=1000, width=1200,
-        margin=dict(l=5, r=5, b=5, t=10),
-        template="simple_white",
-        font_family="Computer Modern",
-        title_font_family="Computer Modern")
+
+    fig = common_layout_update(fig, 1000, 1200, t=10)
     fig.update_layout(legend=dict(yanchor="top",
                                   y=1.025,
                                   xanchor="left",
                                   x=0.37))
-
-    fig.write_image(folder+"images/cluster_scatter.png")
+    fig = common_layout_update(fig, 1000, 1200, t=10)
+    return fig
 
 
 def plot_dim_red(cluster_file, files, folder=""):
@@ -101,9 +102,9 @@ def plot_dim_red(cluster_file, files, folder=""):
                        "PCA + t-SNE"]
     nrows = 3
     ncols = 2
-    labels = pd.read_csv(folder+"data_plots/cluster/"+cluster_file+".csv",
+    labels = pd.read_csv(folder+"cluster/"+cluster_file+".csv",
                          delimiter=',', header=None)
-    subfolder = "data_plots/embed/"
+    subfolder = "embed/"
 
     fig = make_subplots(rows=nrows, cols=ncols,
                         subplot_titles=dim_red_methods)
@@ -118,22 +119,16 @@ def plot_dim_red(cluster_file, files, folder=""):
             showlegend = i == 1 and j == 1
             fig = get_subplot(fig, embed[0, :], embed[1, :], labels,
                               col=j, row=i, showlegend=showlegend)
-    fig.update_layout(
-        height=1000, width=1200,
-        margin=dict(l=5, r=5, b=5, t=30),
-        template="simple_white",
-        font_family="Computer Modern",
-        title_font_family="Computer Modern")
+    fig = common_layout_update(fig, 1000, 1200, t=30)
     fig.update_layout(legend=dict(yanchor="top",
                                   y=0.25,
                                   xanchor="left",
                                   x=0.55))
-    fig.write_image(folder+"images/dim_red_scatter.png")
+    return fig
 
 
 def compare_distributions(files, folder=""):
-    print(files)
-    subfolder = "data_plots/ratios/"
+    subfolder = "ratios/"
     original = np.genfromtxt(folder+subfolder+files[0]+".csv", delimiter=',')
     saucie = np.genfromtxt(folder+subfolder+files[1]+".csv", delimiter=',')
     divae = np.genfromtxt(folder+subfolder+files[2]+".csv", delimiter=',')
@@ -146,9 +141,44 @@ def compare_distributions(files, folder=""):
         print(tukey_hsd(original, saucie, divae, pca, umap, tsne))
 
 
+def plot_batch_correction(batch_file, files, folder):
+    dim_red_methods = ["SAUCIE batch uncorrected", "SAUCIE batch corrected",
+                       "DiVAE", "PCA",
+                       "PCA + UMAP", "PCA + t-SNE"]
+    batch = pd.read_csv(folder+batch_file+".csv",
+                        delimiter=',', header=None)
+    subfolder = "batch_embed/"
+    nrows = 3
+    ncols = 2
+    fig = make_subplots(rows=nrows, cols=ncols,
+                        subplot_titles=dim_red_methods)
+    for i in range(1, nrows+1):
+        for j in range(1, ncols+1):
+            filename = folder+subfolder+files[(i-1)*ncols+j-1]+".csv"
+            embed = pd.read_csv(filename,
+                                delimiter=',',
+                                header=None)
+            embed = embed.to_numpy().T
+            showlegend = i == 1 and j == 1
+            fig = get_subplot(fig, embed[0, :], embed[1, :], batch,
+                              col=j, row=i, showlegend=showlegend)
+    fig = common_layout_update(fig, 1000, 1200, t=10)
+    fig.update_layout(legend=dict(yanchor="top",
+                                  y=1.025,
+                                  xanchor="left",
+                                  x=0.37))
+    return fig
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--folder', type=path, default="")
+    parser.add_argument('--datafolder', type=path, default="")
+    parser.add_argument('--plotfolder', type=path, default="")
+    parser.add_argument('--batches', action='store_true')
+    parser.add_argument('--no-batches', dest='batches', action='store_false')
+    parser.set_defaults(batches=False)
+    args = parser.parse_args()
+
     files_ratio = ["original", "saucie", "divae",
                    "pca", "umap", "tsne"]
     files_cluster = ["original", "saucie",
@@ -157,9 +187,19 @@ if __name__ == '__main__':
     files_dim_red = ["saucie", "divae",
                      "pca", "umap",
                      "tsne"]
-    args = parser.parse_args()
-    folder = args.folder
-    compare_distributions(files_ratio, folder)
-    plot_mixing_ratios(files_ratio, folder)
-    plot_clustering(files_dim_red[0], files_cluster, folder)
-    plot_dim_red(files_cluster[0], files_dim_red, folder)
+    files_batches = ["saucie0", "saucie1",
+                     "divae", "pca",
+                     "umap", "tsne"]
+
+    compare_distributions(files_ratio, args.datafolder)
+    fig = plot_mixing_ratios(files_ratio, args.datafolder)
+    fig.write_image(args.plotfolder+"mixing_ratios_boxplot.png")
+
+    fig = plot_clustering(files_dim_red[0], files_cluster, args.datafolder)
+    fig.write_image(args.plotfolder+"cluster_scatter.png")
+
+    fig = plot_dim_red(files_cluster[0], files_dim_red, args.datafolder)
+    fig.write_image(args.plotfolder+"dim_red_scatter.png")
+    if args.batches:
+        fig = plot_batch_correction("batch", files_batches, args.datafolder)
+        fig.write_image(args.plotfolder+"batch_scatter.png")
