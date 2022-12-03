@@ -7,6 +7,7 @@ from saucie.saucie import SAUCIE_batches, SAUCIE_labels
 from streamlit_elements.elements import convert_df, display_buttons
 from streamlit_elements.figures import prepare_figure
 from streamlit_elements.scores import display_scores
+from streamlit_elements.prepare_data import filter_data, extract_metalabel
 
 
 class streamlitCallbacks(Callback):
@@ -62,6 +63,14 @@ if __name__ == "__main__":
                     If none, select "No batches" and submit.
                     """,
                 )
+
+            frac = st.slider("""What part of genes with highest
+                             variances should
+                             remain after filtering""",
+                             0.1, 1.0, 0.2,
+                             step=0.05,
+                             help="""The genes with zeros only will be
+                             removed before filtering.""")
             normalize = st.checkbox('Normalize my data', value=True,
                                     help="""Unless you are absolutely sure
                                      your data is already normalized and is
@@ -78,9 +87,7 @@ if __name__ == "__main__":
             if batch_select == "No batches":
                 model_batches = None
             else:
-                batches = data[[batch_select]].to_numpy()
-                batches = batches.flatten()
-                data.drop(columns=batch_select, inplace=True)
+                data, batches = extract_metalabel(data, batch_select)
                 model_batches = SAUCIE_batches(epochs=epochs, lr=1e-9,
                                                normalize=normalize,
                                                random_state=42,
@@ -89,15 +96,13 @@ if __name__ == "__main__":
             if label_select == "No labels":
                 ground_truth = None
             else:
-                ground_truth = data[[label_select]].to_numpy()
-                ground_truth = ground_truth.flatten()
-                data.drop(columns=label_select, inplace=True)
+                data, ground_truth = extract_metalabel(data, label_select)
+
             # keep colnames and rownames for download
             indexes = data.index.tolist()
             columns = data.columns.tolist()
-            # convert data
-            data = data.to_numpy()
-            data = data.astype(float)
+            # convert and filter data
+            data = filter_data(data, frac=frac)
 
             if model_batches is not None:
                 with progress_info:
