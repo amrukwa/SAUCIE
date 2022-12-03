@@ -40,6 +40,5 @@ FROM base as dev
 
 COPY --from=builder /venv /venv
 COPY docker-entrypoint.sh streamlit_app.py ./
-# COPY saucie/ ./saucie/
 COPY streamlit_elements/ ./streamlit_elements/
 CMD ["./docker-entrypoint.sh"]
