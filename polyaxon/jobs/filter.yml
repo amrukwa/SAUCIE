@@ -31,6 +31,10 @@ inputs:
     type: str
     value: unbatched_data
     isOptional: true
+  - name: frac
+    type: float
+    value: 0.2
+    isOptional: true
 
 outputs:
   - name: variances
@@ -71,4 +75,6 @@ run:
     - "{{ label_col }}"
     - --batch_col
     - "{{ batch_col }}"
+    - --frac
+    - "{{ frac }}"
   

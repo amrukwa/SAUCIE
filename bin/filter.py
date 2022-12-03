@@ -15,10 +15,11 @@ def path(file):
     raise ValueError(f"File not found or not a file: {file}")
 
 
-def filter_data(data):
+def filter_data(data, part=0.2):
     data = data.dropna(axis=1)
+    data = data.loc[~(data == 0).all(axis=1)]
     x = np.var(data, axis=1)
-    thr = (-1)*np.sort(-x)[int(x.shape[0]*0.2)]
+    thr = (-1)*np.sort(-x)[int(x.shape[0]*part)]
     experiment.log_metrics(thr=thr)
     is_in_filtered = x > thr
     filtered = data[is_in_filtered]
@@ -68,13 +69,14 @@ parser.add_argument('--metadata', type=path, default="")
 parser.add_argument('--label_col', type=str, default="CellType")
 parser.add_argument('--name_col', type=str, default="NAME")
 parser.add_argument('--batch_col', type=str, default="unbatched_data")
+parser.add_argument('--frac', type=float, default=0.2)
 
 args = parser.parse_args()
 
 # filter data and get statistics
 data = pd.read_csv(args.data, index_col=0)
 experiment.log_metrics(n_genes=data.shape[0])
-data = filter_data(data)
+data = filter_data(data, args.frac)
 experiment.log_metrics(n_genes=data.shape[0])
 
 # get metalabels
