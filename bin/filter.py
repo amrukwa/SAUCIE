@@ -18,6 +18,8 @@ def path(file):
 def filter_data(data, part=0.2):
     data = data.dropna(axis=1)
     data = data.loc[~(data == 0).all(axis=1)]
+    experiment.log_metrics(data_min=data.min())
+    experiment.log_metrics(data_max=data.max())
     data.drop(columns=data.columns[data.dtypes == object], inplace=True)
     x = np.var(data, axis=1)
     thr = (-1)*np.sort(-x)[int(x.shape[0]*part)]
@@ -48,13 +50,13 @@ def save_metadata(metadata, col, name):
         values = np.zeros(metadata.shape[0])
     else:
         values = np.array(pd.factorize(metadata[col])[0])
-        unique_val, _ = np.unique(metadata[col], return_counts=True)
+        unique_val, counts = np.unique(metadata[col], return_counts=True)
         count = unique_val.shape[0]
     result_path = os.path.join(experiment.get_outputs_path(),
                                name)
     with (open(result_path, 'wb')) as outfile:
         np.save(outfile, values)
-    return count
+    return count, counts
 
 
 def get_metadata_df(metadata, col, idx):
@@ -84,12 +86,17 @@ experiment.log_metrics(n_genes=data.shape[0])
 meta = pd.read_csv(args.metadata, index_col=0)
 
 # ground truths
-n_clusters = save_metadata(meta, args.label_col, 'true_labels.npy')
+n_clusters, cluster_count = save_metadata(meta, args.label_col,
+                                          'true_labels.npy')
 experiment.log_metrics(n_clusters=n_clusters)
+experiment.log_metrics(min_cluster=cluster_count.min())
+experiment.log_metrics(max_cluster=cluster_count.max())
 
 # batches
-n_batches = save_metadata(meta, args.batch_col, 'batches.npy')
+n_batches, batch_count = save_metadata(meta, args.batch_col, 'batches.npy')
 experiment.log_metrics(n_batches=n_batches)
+experiment.log_metrics(min_batch=batch_count.min())
+experiment.log_metrics(max_batch=batch_count.max())
 
 # get overall csv file
 new_labels = get_metadata_df(meta, args.label_col, args.name_col)
