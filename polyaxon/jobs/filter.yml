@@ -1,7 +1,7 @@
 ---
 version: 1.1
 kind: component
-tags: 
+tags:
   - data_engineering
   - filter
 name: prepare_data
@@ -77,4 +77,3 @@ run:
     - "{{ batch_col }}"
     - --frac
     - "{{ frac }}"
-  

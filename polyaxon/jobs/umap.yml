@@ -1,7 +1,7 @@
 ---
 version: 1.1
 kind: component
-tags: 
+tags:
   - umap
   - metrics
 name: umap_test_metrics
@@ -36,7 +36,7 @@ outputs:
   - name: reduced_ratios
     type: artifacts
     description: Mixing ratios in the latent space
-  
+
 run:
   kind: job
   connections:
