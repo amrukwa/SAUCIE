@@ -105,7 +105,6 @@ class SAUCIE_BN(object):
 
         # get classifier layer
         classifier = Model(inputs, layer_c, name='classifier')
-
         # combine models
         SAUCIE_BN_model = Model([inputs, batches], outputs, name="SAUCIE_BN")
 

@@ -1,3 +1,5 @@
+![Run unit tests](https://github.com/amrukwa/SAUCIE/actions/workflows/pytest.yml/badge.svg)
+[![CodeFactor](https://www.codefactor.io/repository/github/amrukwa/saucie/badge)](https://www.codefactor.io/repository/github/amrukwa/saucie)
 # SAUCIE
 An implementation of SAUCIE (Sparse Autoencoder for Clustering, Imputing, and Embedding) in Tensorflow.
 ***
