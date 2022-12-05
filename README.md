@@ -1,3 +1,5 @@
+![Run unit tests](https://github.com/amrukwa/SAUCIE/actions/workflows/pytest.yml/badge.svg)
+
 # SAUCIE
 An implementation of SAUCIE (Sparse Autoencoder for Clustering, Imputing, and Embedding) in Tensorflow.
 ***
