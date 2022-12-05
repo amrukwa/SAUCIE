@@ -6,8 +6,8 @@ from tensorflow.keras.callbacks import Callback, EarlyStopping
 from saucie.saucie import SAUCIE_batches, SAUCIE_labels
 from streamlit_elements.elements import convert_df, display_buttons
 from streamlit_elements.figures import prepare_figure
+from streamlit_elements.prepare_data import extract_metalabel, filter_data
 from streamlit_elements.scores import display_scores
-from streamlit_elements.prepare_data import filter_data, extract_metalabel
 
 
 class streamlitCallbacks(Callback):
