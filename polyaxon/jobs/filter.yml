@@ -52,7 +52,7 @@ outputs:
   - name: overall
     type: artifacts
     description: csv file combining data, labels and batches
-  
+
 run:
   kind: job
   connections:
