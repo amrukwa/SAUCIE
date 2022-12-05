@@ -60,7 +60,7 @@ jobs:
       run: poetry run pytest
 
 
-nmacos_tests:
+  macos_tests:
     runs-on: macos-latest
     strategy:
       matrix:
