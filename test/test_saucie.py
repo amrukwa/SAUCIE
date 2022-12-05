@@ -226,32 +226,6 @@ def test_SAUCIE_batches_is_clonable():
     np.testing.assert_array_equal(cleaned1, cleaned2)
 
 
-def test_SAUCIE_is_exportable():
-    """
-    test if SAUCIE classifier and transformer can be exported
-    with joblib
-    """
-    obj = SAUCIE_labels()
-    with io.BytesIO() as f:
-        joblib.dump(obj, f)
-        f.seek(0)
-        obj2 = joblib.load(f)
-    assert str(obj) == str(obj2)
-
-
-def test_SAUCIE_batches_is_exportable():
-    """
-    test if SAUCIE batch transformer can be exported
-    with joblib
-    """
-    obj = SAUCIE_batches()
-    with io.BytesIO() as f:
-        joblib.dump(obj, f)
-        f.seek(0)
-        obj2 = joblib.load(f)
-    assert str(obj) == str(obj2)
-
-
 def test_SAUCIE_exporting_restores_tf_graph():
     """
     test if SAUCIE classifier and transformer can be exported
