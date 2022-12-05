@@ -12,12 +12,8 @@ def data_saucie():
     """
     prepare exemplary test data
     """
-    data = make_blobs(
-        n_samples=10000,
-        n_features=20,
-        centers=2,
-        random_state=42,
-    )[0]
+    data = make_blobs(n_samples=10000, n_features=20,
+                      centers=2, random_state=42)[0]
     data = data - np.min(data)
     return data
 
@@ -269,3 +265,19 @@ def test_SAUCIE_batches_exporting_restores_tf_graph():
     cleaned2 = saucie2.transform(data, batches)
 
     np.testing.assert_array_equal(cleaned1, cleaned2)
+
+
+def test_SAUCIE_labels_data_categorically():
+    """
+    test if SAUCIE clusters the data
+    and returns consecutive integer labels
+    """
+    data = data_saucie()
+    saucie = SAUCIE_labels(epochs=2, lr=1e-6, normalize=True,
+                           random_state=42, verbose=0)
+    saucie.fit(data)
+    labels = saucie.predict(data)
+    vals = np.unique(labels)
+    expected_clusters = np.linspace(0, vals.max(), num=vals.shape[0])
+    assert labels.dtype == np.int64
+    np.testing.assert_array_equal(vals, expected_clusters)
