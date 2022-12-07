@@ -79,6 +79,7 @@ args = parser.parse_args()
 data = pd.read_csv(args.data, index_col=0)
 experiment.log_metrics(n_genes=data.shape[0])
 data = filter_data(data, args.frac)
+experiment.log_metrics(n_cells=data.shape[1])
 experiment.log_metrics(n_genes=data.shape[0])
 
 # get metalabels
