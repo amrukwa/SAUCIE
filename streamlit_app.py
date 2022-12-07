@@ -98,11 +98,10 @@ if __name__ == "__main__":
             else:
                 data, ground_truth = extract_metalabel(data, label_select)
 
-            # keep colnames and rownames for download
+            # keep rownames for download
             indexes = data.index.tolist()
-            columns = data.columns.tolist()
             # convert and filter data
-            data = filter_data(data, frac=frac)
+            data, columns = filter_data(data, frac=frac)
 
             if model_batches is not None:
                 with progress_info:

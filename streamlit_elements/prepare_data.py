@@ -10,10 +10,10 @@ def filter_data(data, frac=1.0):
         thr = (-1)*np.sort(-x)[int(x.shape[0]*frac)]
         is_in_filtered = x > thr
         data = data[is_in_filtered.index[is_in_filtered]]
-
+    columns = data.columns.tolist()
     data = data.to_numpy()
     data = data.astype(float)
-    return data
+    return data, columns
 
 
 def extract_metalabel(data, label):
