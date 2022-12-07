@@ -58,10 +58,10 @@ def save_metadata(metadata, col, name):
     return count, counts
 
 
-def get_metadata_df(metadata, col, idx):
+def get_metadata_df(metadata, col, idx, new_idx="cell_type"):
     vals = metadata[col].to_numpy().reshape(1, metadata.shape[0])
     df_vals = pd.DataFrame(vals, columns=metadata[idx],
-                           index=["cell_type"])
+                           index=[new_idx])
     return df_vals
 
 
@@ -104,7 +104,8 @@ new_labels = get_metadata_df(meta, args.label_col, args.name_col)
 
 new_df = pd.concat([data, new_labels])
 if args.batch_col != "unbatched_data":
-    batch_df = get_metadata_df(meta, args.batch_col, args.name_col)
+    batch_df = get_metadata_df(meta, args.batch_col, args.name_col,
+                               new_idx="run")
     new_df = pd.concat([new_df, batch_df])
 
 new_df = new_df.T
