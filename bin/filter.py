@@ -46,8 +46,9 @@ def filter_data(data, part=0.2):
 
 def save_metadata(metadata, col, name):
     if col == "unbatched_data":
-        counts = 1
+        count = 1
         values = np.zeros(metadata.shape[0])
+        counts = np.array([metadata.shape[0]])
     else:
         values = np.array(pd.factorize(metadata[col])[0])
         unique_val, counts = np.unique(metadata[col], return_counts=True)
