@@ -73,6 +73,8 @@ run:
     - "{{ metadata }}"
     - --label_col
     - "{{ label_col }}"
+    - --name_col
+    - "{{ name_col }}"
     - --batch_col
     - "{{ batch_col }}"
     - --frac
