@@ -18,9 +18,9 @@ def path(file):
 def filter_data(data, part=0.2):
     data = data.dropna(axis=1)
     data = data.loc[~(data == 0).all(axis=1)]
+    data.drop(columns=data.columns[data.dtypes == object], inplace=True)
     experiment.log_metrics(data_min=data.min())
     experiment.log_metrics(data_max=data.max())
-    data.drop(columns=data.columns[data.dtypes == object], inplace=True)
     x = np.var(data, axis=1)
     thr = (-1)*np.sort(-x)[int(x.shape[0]*part)]
     experiment.log_metrics(thr=thr)
