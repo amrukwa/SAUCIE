@@ -76,6 +76,13 @@ if __name__ == "__main__":
                                      your data is already normalized and is
                                       not unbalanced,
                                       do not skip normalization.""")
+            b_download = st.checkbox("""Prepare batch corrected data for
+                                    download""",
+                                     value=False,
+                                     help="""Converting the data to .csv
+                                     may take some
+                                     time and make the application
+                                     much slower.""")
             submit_button = st.form_submit_button(label="Submit")
 
         if submit_button:
@@ -154,11 +161,15 @@ if __name__ == "__main__":
             embedded_csv = convert_df(pd.DataFrame(embedded, index=indexes,
                                                    columns=["SAUCIE1",
                                                             "SAUCIE2"]))
-            if batched:
+            del saucie
+            if batched and b_download:
+                del model_batches
+                cleaned_data = cleaned_data - cleaned_data.min()
+                cleaned_data = cleaned_data.astype(np.float16)
                 cleaned_data = convert_df(pd.DataFrame(cleaned_data,
                                           index=indexes, columns=columns))
             # labels, embedding, model, cleaned data, model for batches
             display_buttons(labels_csv, embedded_csv,
-                            cleaned_data, batched)
+                            cleaned_data, batched and b_download)
             with progress_info:
                 st.info("Done!")
