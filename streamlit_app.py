@@ -82,7 +82,8 @@ if __name__ == "__main__":
                                      help="""Converting the data to .csv
                                      may take some
                                      time and make the application
-                                     much slower.""")
+                                     much slower.
+                                     Applies only for data with batches.""")
             submit_button = st.form_submit_button(label="Submit")
 
         if submit_button:

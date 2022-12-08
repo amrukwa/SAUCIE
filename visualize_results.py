@@ -201,5 +201,5 @@ if __name__ == '__main__':
     fig = plot_dim_red(files_cluster[0], files_dim_red, args.datafolder)
     fig.write_image(args.plotfolder+"dim_red_scatter.png")
     if args.batches:
-        fig = plot_batch_correction("batch", files_batches, args.datafolder)
+        fig = plot_batch_correction("batches", files_batches, args.datafolder)
         fig.write_image(args.plotfolder+"batch_scatter.png")
