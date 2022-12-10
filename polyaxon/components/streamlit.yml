@@ -49,6 +49,7 @@ run:
         ln -s \
           /data/cache/{{ globals.project_name }}/streamlit/cache \
          ~/.streamlit/cache ;
+        . /venv/bin/activate;
         streamlit run {{ app }} \
           --server.enableCORS=false \
           --server.enableXsrfProtection=false \
