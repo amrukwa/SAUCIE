@@ -73,7 +73,11 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
             X = np.arcsinh(X)
         if y is None:
             y = np.repeat(self.y_[0]+1, X.shape[0])
-        for batch_name in np.unique(y):
+        batches_vals = np.unique(y)
+        if batches_vals.shape[0] == 1 and self.y_[0] == batches_vals[0]:
+            return X
+        X_transformed = np.zeros(X.shape)
+        for batch_name in batches_vals:
             if batch_name == self.y_[0]:
                 # leaving reference batch unchanged
                 continue
@@ -92,10 +96,22 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
                                      verbose=self.verbose
                                      )]
             X_trans = ae_.predict([X[np.where(y == batch_name)],
-                                   y[np.where(y == batch_name)]])
-            X[np.where(y == batch_name)] = X_trans
-
-        return X
+                                   nonref_batch])
+            X_transformed[np.where(y == batch_name)] = X_trans
+            if self.y_ in batches_vals:
+                if len(self.history) == 1:
+                    best_hist = self.history[1].history['loss'][-1]
+                    X_trans = ae_.predict([X[np.where(y == self.y_)],
+                                          ref_batch])
+                    X_transformed[np.where(y == self.y_)] = X_trans
+                else:
+                    cur_hist = self.history[-1].history['loss'][-1]
+                    if best_hist > cur_hist:
+                        best_hist = cur_hist
+                        X_trans = ae_.predict([X[np.where(y == self.y_)],
+                                              ref_batch])
+                        X_transformed[np.where(y == self.y_)] = X_trans
+        return X_transformed
 
 
 class SAUCIE_labels(BaseEstimator, ClusterMixin, TransformerMixin):

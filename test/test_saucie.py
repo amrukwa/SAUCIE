@@ -72,7 +72,7 @@ def test_SAUCIE_batches_preserves_ref_batch():
     test if SAUCIE does not modify the samples from reference batch
     """
     data = data_saucie()
-    batches = data_batches()
+    batches = np.zeros(10000)
     saucie = SAUCIE_batches(epochs=2, lr=1e-9, normalize=False,
                             random_state=42, verbose=0)
     saucie.fit(data, batches)

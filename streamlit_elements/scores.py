@@ -1,3 +1,4 @@
+import numpy as np
 import streamlit as st
 from sklearn.metrics import adjusted_rand_score, silhouette_score
 
@@ -16,8 +17,11 @@ def compute_silhouette(x, y):
 
 def display_scores(X, X_embed, y_pred, y_true=None):
     col1, col2, col3 = st.columns(3)
-    silhouette_labels = compute_silhouette(X, y_pred)
-    silhouette_labels = round(float(silhouette_labels), 5)
+    if np.unique(y_pred).shape[0] == 1:
+        silhouette_labels = "-"
+    else:
+        silhouette_labels = compute_silhouette(X, y_pred)
+        silhouette_labels = round(float(silhouette_labels), 5)
     col1.metric("Silhouette of the clustering",
                 value=silhouette_labels)
     if y_true is not None:
