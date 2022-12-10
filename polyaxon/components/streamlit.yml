@@ -1,0 +1,60 @@
+version: 1.1
+kind: component
+name: streamlit
+inputs:
+  - name: app
+    isOptional: true
+    type: str
+    value: streamlit_app.py
+  - name: image
+    isOptional: true
+    type: str
+    value: amrukwa/saucie:dev
+  - name: args
+    isOptional: true
+    type: str
+    value: ''
+run:
+  kind: service
+  volumes:
+    - name: workspace
+      persistentVolumeClaim:
+        claimName: workspace-pvc
+  connections:
+    - cache
+    - data
+    # - kiaed01
+  rewritePath: true
+  ports:
+    - 8501
+  container:
+    image: '{{image}}'
+    workingDir: /workspace/{{ globals.project_name }}
+    imagePullPolicy: Always
+    env:
+      - name: POLYAXON_RUN_OUTPUTS_PATH
+        value: '{{ globals.run_outputs_path }}'
+      - name: PYTHONPATH
+        value: /workspace/{{ globals.project_name }}
+    command:
+      - /bin/bash
+      - '-c'
+    args:
+      - |
+        ls -l /data ;
+        mkdir -p \
+          /data/cache/{{ globals.project_name }}/streamlit/cache ;
+        mkdir -p \
+          ~/.streamlit ;
+        ln -s \
+          /data/cache/{{ globals.project_name }}/streamlit/cache \
+         ~/.streamlit/cache ;
+        streamlit run {{ app }} \
+          --server.enableCORS=false \
+          --server.enableXsrfProtection=false \
+          --server.headless=true \
+          --server.fileWatcherType=poll \
+          -- {{ args }}
+    volumeMounts:
+      - name: workspace
+        mountPath: /workspace
