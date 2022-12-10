@@ -41,7 +41,7 @@ run:
       - '-c'
     args:
       - |
-        ls;
+        ls -l;
         ls -l /data ;
         mkdir -p \
           /data/cache/{{ globals.project_name }}/streamlit/cache ;
