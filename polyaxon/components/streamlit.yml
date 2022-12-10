@@ -5,7 +5,7 @@ inputs:
   - name: app
     isOptional: true
     type: str
-    value: streamlit_app.py
+    value: bin.streamlit_app.py
   - name: image
     isOptional: true
     type: str
