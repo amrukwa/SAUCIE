@@ -9,7 +9,7 @@ The code used for measuring the goodness of the dimensionality reduction can be 
 
 ## Usage
 ### On remote server
-If you don't want to download and install anything, the deployed application is available [here]().
+If you don't want to download and install anything, the deployed application is available [here](http://dssoftware.aei.polsl.pl/saucie/SAUCIE/).
 ### Docker
 The other recommended way to use this software is through Docker. This is the second most convenient way, if you want to use saucie application.  
 To install latest stable version use:  
