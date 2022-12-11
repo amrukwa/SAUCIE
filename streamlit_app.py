@@ -89,16 +89,22 @@ if __name__ == "__main__":
         if submit_button:
             progress_info = st.empty()
             progress_bar = st.progress(progress)
-            callbacks = [streamlitCallbacks(), EarlyStopping(monitor='loss',
-                         patience=5, restore_best_weights=True)]
+            st_callback = streamlitCallbacks()
 
             if batch_select == "No batches":
                 model_batches = None
+                batches = None
             else:
+                epochs = 500
+                callbacks = [st_callback, EarlyStopping(monitor='mmd_loss',
+                             patience=25, restore_best_weights=True)]
                 data, batches = extract_metalabel(data, batch_select)
-                model_batches = SAUCIE_batches(epochs=epochs, lr=1e-9,
+                model_batches = SAUCIE_batches(lambda_b=2.5,
+                                               batch_size=1024,
+                                               epochs=epochs,
+                                               lr=2e-3,
                                                normalize=normalize,
-                                               random_state=42,
+                                               random_state=123,
                                                callback=callbacks)
 
             if label_select == "No labels":
@@ -120,6 +126,8 @@ if __name__ == "__main__":
                     cleaned_data = model_batches.transform(data, batches)
                     batch_no = 1
                     progress = 0
+                    epochs = 100
+                    del model_batches
                 batched = True
             else:
                 batched = False
@@ -131,8 +139,10 @@ if __name__ == "__main__":
                     cleaned_data = data
 
             # fit on the cleaned data -> labels, embed
+            callbacks = [st_callback, EarlyStopping(monitor='loss',
+                         patience=20, restore_best_weights=True)]
             saucie = SAUCIE_labels(epochs=epochs, lr=1e-4, normalize=False,
-                                   lambda_c=0.1, lambda_d=0.2,
+                                   lambda_c=0.1, lambda_d=0.4,
                                    layers=[512, 256, 128, 2],
                                    batch_size=256, shuffle=True,
                                    callback=callbacks)
@@ -150,7 +160,7 @@ if __name__ == "__main__":
             with progress_info:
                 st.info("Preparing the plot")
                 fig = prepare_figure(embedded[:, 0], embedded[:, 1],
-                                     labels, ground_truth)
+                                     labels, ground_truth, batches)
             st.plotly_chart(fig, use_container_width=True)
             with progress_info:
                 st.info("Calculating scores")
@@ -164,7 +174,6 @@ if __name__ == "__main__":
                                                             "SAUCIE2"]))
             del saucie
             if batched and b_download:
-                del model_batches
                 cleaned_data = cleaned_data - cleaned_data.min()
                 cleaned_data = cleaned_data.astype(np.float16)
                 cleaned_data = convert_df(pd.DataFrame(cleaned_data,
