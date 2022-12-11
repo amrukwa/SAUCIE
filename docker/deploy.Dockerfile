@@ -19,7 +19,7 @@ FROM builder AS deps_builder
 COPY . /app
 RUN poetry install &&\
     poetry build
-RUN poetry export -f requirements.txt --output requirements.txt \
+RUN poetry export -f requirements.txt -o requirements.txt \
     --without dev,test --with deploy
 
 FROM builder AS deps_install
@@ -42,4 +42,4 @@ ENV PYTHONPATH="/app"
 WORKDIR /app
 COPY streamlit_elements/ ./streamlit_elements/
 COPY ./streamlit_app.py .
-CMD ["streamlit", "run", "streamlit_app.py", " --server.port=8501", "--server.address=0.0.0.0", "--server.enableCORS=false", "--server.enableXsrfProtection=false", "--server.headless=true"]
+CMD ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.enableCORS=false", "--server.enableXsrfProtection=false", "--server.headless=true"]
