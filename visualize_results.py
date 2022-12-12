@@ -44,11 +44,13 @@ def get_subplot(fig, x, y, labels,
     """
     Add the data to a specified subplot
     """
+    single_labels = np.unique(labels)
     if main_col:
         colors = px.colors.qualitative.Plotly
     else:
         colors = px.colors.qualitative.Safe
-    single_labels = np.unique(labels)
+        if single_labels.shape[0] > 10:
+            colors = px.colors.qualitative.Alphabet
     for i, label in enumerate(single_labels):
         fig.add_trace(go.Scatter(x=x[np.where(labels == label)[0]],
                                  name=str(label),
