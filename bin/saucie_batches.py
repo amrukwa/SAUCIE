@@ -29,7 +29,7 @@ def model(X, batches):
                                  callback=[EarlyStopping(monitor='loss',
                                            patience=50,
                                            restore_best_weights=True),
-                                           PolyaxonCallback()],
+                                           PolyaxonCallback(log_model=False)],
                                  verbose=True).fit(X, batches)
     cleaned_data = transformer.transform(X, batches)
     estimator = SAUCIE_labels(lr=1e-4, shuffle=True,
