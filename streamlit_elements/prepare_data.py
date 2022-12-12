@@ -21,3 +21,12 @@ def extract_metalabel(data, label):
     metalabel = metalabel.flatten()
     data = data.drop(columns=label)
     return data, metalabel
+
+
+def normalize_data(data, normalize=True):
+    if normalize:
+        print(normalize)
+        data = data - np.min(data, axis=0)
+        data = data/np.max(data, axis=0)
+        data = np.arcsinh(data)
+    return data
