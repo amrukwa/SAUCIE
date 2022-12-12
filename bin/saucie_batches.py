@@ -4,7 +4,7 @@ import pickle
 
 import numpy as np
 from polyaxon.tracking import Run
-from polyaxon.tracking.contrib.tensorflow import PolyaxonCallback
+from polyaxon.tracking.contrib.keras import PolyaxonCallback
 from sklearn.metrics import adjusted_rand_score, silhouette_score
 from tensorflow.keras.callbacks import EarlyStopping
 
@@ -29,10 +29,7 @@ def model(X, batches):
                                  callback=[EarlyStopping(monitor='loss',
                                            patience=50,
                                            restore_best_weights=True),
-                                           PolyaxonCallback(run=experiment,
-                                                            log_image=True,
-                                                            log_histo=True,
-                                                            log_tensor=True)],
+                                           PolyaxonCallback()],
                                  verbose=True).fit(X, batches)
     cleaned_data = transformer.transform(X, batches)
     estimator = SAUCIE_labels(lr=1e-4, shuffle=True,
