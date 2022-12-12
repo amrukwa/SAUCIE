@@ -60,7 +60,7 @@ run:
     - python
     args:
     - -m
-    - bin.saucie_metrics
+    - bin.saucie_batches
     - --data
     - "{{ data }}"
     - --true_labels

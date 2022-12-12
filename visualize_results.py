@@ -187,7 +187,7 @@ if __name__ == '__main__':
     files_dim_red = ["saucie", "divae",
                      "pca", "umap",
                      "tsne"]
-    files_batches = ["saucie0", "saucie1",
+    files_batches = ["saucie0", "saucie",
                      "divae", "pca",
                      "umap", "tsne"]
 
