@@ -25,6 +25,7 @@ def model(X, batches):
     transformer = SAUCIE_batches(lr=1e-4,
                                  batch_size=256,
                                  epochs=200,
+                                 random_state=123,
                                  callback=[EarlyStopping(monitor='loss',
                                            patience=50,
                                            restore_best_weights=True),
@@ -33,6 +34,7 @@ def model(X, batches):
     cleaned_data = transformer.transform(X, batches)
     estimator = SAUCIE_labels(lr=1e-4, shuffle=True,
                               batch_size=256, verbose=0,
+                              random_state=123,
                               callback=[PolyaxonCallback(log_model=False)]
                               ).fit(X)
     embed = estimator.transform(X)
