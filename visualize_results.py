@@ -147,7 +147,7 @@ def plot_batch_correction(batch_file, files, folder):
                        "PCA + UMAP", "PCA + t-SNE"]
     batch = pd.read_csv(folder+batch_file+".csv",
                         delimiter=',', header=None)
-    subfolder = "batch_embed/"
+    subfolder = "embed/"
     nrows = 3
     ncols = 2
     fig = make_subplots(rows=nrows, cols=ncols,

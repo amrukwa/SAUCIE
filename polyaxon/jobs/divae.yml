@@ -19,6 +19,11 @@ inputs:
     type: path
     value: /data/gluster/saucie/PBMC/true_labels.npy
     isOptional: true
+  - name: max_clusters
+    type: int
+    value: 20
+    isOptional: true
+
 
 outputs:
   - name: model
@@ -55,3 +60,5 @@ run:
     - "{{ data }}"
     - --true_labels
     - "{{ true_labels }}"
+    - --max_clusters
+    - "{{ max_clusters }}"

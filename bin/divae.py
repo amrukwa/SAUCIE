@@ -20,8 +20,9 @@ def path(file):
     raise ValueError(f"File not found or not a file: {file}")
 
 
-def model(X):
-    estimator = DiVAE(auto_gmm=AutoGMM(max_clusters=20, random_state=42,
+def model(X, max_clusters):
+    estimator = DiVAE(auto_gmm=AutoGMM(max_clusters=max_clusters,
+                                       random_state=42,
                                        method="youden"),
                       vae=VAE(intermediate_dim=512, latent_dim=2, epochs=250,
                               random_state=42, batch_size=256,
@@ -45,6 +46,7 @@ def load_data(fname):
 parser = argparse.ArgumentParser()
 parser.add_argument('--data', type=path, default="")
 parser.add_argument('--true_labels', type=path, default="")
+parser.add_argument('--max_clusers', type=int, default=20)
 args = parser.parse_args()
 
 # data is normalized inside the model
@@ -58,7 +60,7 @@ y = load_data(args.true_labels)
 experiment.log_data_ref('dataset_X', content=X)
 experiment.log_data_ref('dataset_y', content=y)
 
-estimator, embed, labels = model(X=X)
+estimator, embed, labels = model(X=X, max_clusters=args.max_clusters)
 silhouette_embed = silhouette_score(embed, y)
 silhouette_labels = silhouette_score(X, labels)
 ari = adjusted_rand_score(y, labels)
