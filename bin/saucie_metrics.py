@@ -1,6 +1,5 @@
 import argparse
 import os
-import pickle
 
 import numpy as np
 from polyaxon.tracking import Run
@@ -80,10 +79,6 @@ experiment.log_metrics(reduced_mixing_ratio=np.mean(ratios))
 experiment.log_metrics(amb_var=np.mean(var[0]))
 experiment.log_metrics(sub_var=np.mean(var[1]))
 
-outpath = os.path.join(experiment.get_outputs_path(), 'model.pkl')
-with (open(outpath, 'wb')) as outfile:
-    pickle.dump(estimator, outfile)
-
 result_path = os.path.join(experiment.get_outputs_path(), 'embed.csv')
 with (open(result_path, 'wb')) as outfile:
     np.savetxt(outfile, embed, delimiter=",")
@@ -101,9 +96,3 @@ result_path = os.path.join(experiment.get_outputs_path(),
                            'reduced_ratios.csv')
 with (open(result_path, 'wb')) as outfile:
     np.savetxt(outfile, ratios, delimiter=",")
-
-experiment.log_model(
-    outpath,
-    name='SAUCIE model',
-    framework='sklearn'
-)

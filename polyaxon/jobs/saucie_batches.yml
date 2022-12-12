@@ -25,12 +25,6 @@ inputs:
     isOptional: true
 
 outputs:
-  - name: model_batches
-    type: artifacts
-    description: SAUCIE batch correction model
-  - name: model
-    type: artifacts
-    description: SAUCIE model
   - name: cleaned_data
     type: artifacts
     description: SAUCIE batch correction

@@ -21,9 +21,6 @@ inputs:
     isOptional: true
 
 outputs:
-  - name: model
-    type: artifacts
-    description: SAUCIE model
   - name: reduced_dims
     type: artifacts
     description: SAUCIE dimensionality reduction
