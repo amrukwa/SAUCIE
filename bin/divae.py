@@ -46,7 +46,7 @@ def load_data(fname):
 parser = argparse.ArgumentParser()
 parser.add_argument('--data', type=path, default="")
 parser.add_argument('--true_labels', type=path, default="")
-parser.add_argument('--max_clusers', type=int, default=20)
+parser.add_argument('--max_clusters', type=int, default=20)
 args = parser.parse_args()
 
 # data is normalized inside the model
