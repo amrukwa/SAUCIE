@@ -33,7 +33,9 @@ def model(X, batches):
                                  verbose=True).fit(X, batches)
     cleaned_data = transformer.transform(X, batches)
     estimator = SAUCIE_labels(lr=1e-4, shuffle=True,
-                              batch_size=256, verbose=0).fit(X)
+                              batch_size=256, verbose=0,
+                              callback=[PolyaxonCallback(log_model=False)]
+                              ).fit(X)
     embed = estimator.transform(X)
     labels = estimator.predict(X)
     return [transformer, estimator], [embed, labels, cleaned_data]

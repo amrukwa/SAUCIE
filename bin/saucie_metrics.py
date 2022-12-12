@@ -4,6 +4,7 @@ import pickle
 
 import numpy as np
 from polyaxon.tracking import Run
+from polyaxon.tracking.contrib.keras import PolyaxonCallback
 from sklearn.metrics import adjusted_rand_score, silhouette_score
 
 import metrics.dim_reduction as dim_red
@@ -22,7 +23,9 @@ def path(file):
 
 def model(X):
     estimator = SAUCIE_labels(lr=1e-4, shuffle=True,
-                              batch_size=256, verbose=0).fit(X)
+                              batch_size=256, verbose=0,
+                              callback=[PolyaxonCallback(log_model=False)]
+                              ).fit(X)
     embed = estimator.transform(X)
     labels = estimator.predict(X)
     return estimator, embed, labels
