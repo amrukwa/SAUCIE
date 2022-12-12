@@ -28,7 +28,7 @@ def model(X, batches):
                                  callback=[EarlyStopping(monitor='loss',
                                            patience=50,
                                            restore_best_weights=True)],
-                                 verbose=0).fit(X, batches)
+                                 verbose=True).fit(X, batches)
     cleaned_data = transformer.transform(X, batches)
     estimator = SAUCIE_labels(lr=1e-4, shuffle=True,
                               batch_size=256, verbose=0).fit(X)
