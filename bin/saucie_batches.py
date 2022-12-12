@@ -5,10 +5,11 @@ import pickle
 import numpy as np
 from polyaxon.tracking import Run
 from sklearn.metrics import adjusted_rand_score, silhouette_score
+from tensorflow.keras.callbacks import EarlyStopping
 
 import metrics.dim_reduction as dim_red
 from metrics.dunn import dunn_index
-from saucie.saucie import SAUCIE_labels, SAUCIE_batches
+from saucie.saucie import SAUCIE_batches, SAUCIE_labels
 
 # Polyaxon
 experiment = Run()
@@ -21,8 +22,13 @@ def path(file):
 
 
 def model(X, batches):
-    transformer = SAUCIE_batches(lr=1e-4, shuffle=True,
-                                 batch_size=256, verbose=0).fit(X, batches)
+    transformer = SAUCIE_batches(lr=1e-4,
+                                 batch_size=256,
+                                 epochs=200,
+                                 callback=[EarlyStopping(monitor='loss',
+                                           patience=50,
+                                           restore_best_weights=True)],
+                                 verbose=0).fit(X, batches)
     cleaned_data = transformer.transform(X, batches)
     estimator = SAUCIE_labels(lr=1e-4, shuffle=True,
                               batch_size=256, verbose=0).fit(X)
