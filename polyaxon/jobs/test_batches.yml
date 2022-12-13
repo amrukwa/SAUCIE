@@ -1,0 +1,61 @@
+---
+version: 1.1
+kind: component
+tags:
+  - saucie
+  - batches
+  - test
+name: saucie_unittest_batches
+presets:
+  - default
+queue: cpu_medium
+
+# more here: https://polyaxon.com/docs/core/specification/io/
+inputs:
+  - name: data
+    type: path
+    value: /data/gluster/saucie/batch/filtered_data.npy
+    isOptional: true
+  - name: true_labels
+    type: path
+    value: /data/gluster/saucie/batch/true_labels.npy
+    isOptional: true
+  - name: batches
+    type: path
+    value: /data/gluster/saucie/batch/batches.npy
+    isOptional: true
+
+outputs:
+  - name: normalized_data
+    type: artifacts
+    description: input to the model
+  - name: cleaned_data
+    type: artifacts
+    description: SAUCIE batch correction
+  - name: reduced_dims
+    type: artifacts
+    description: SAUCIE dimensionality reduction
+  - name: labels
+    type: artifacts
+    description: SAUCIE clustering
+
+run:
+  kind: job
+  connections:
+      - cache
+      - data
+  container:
+    image: quay.io/kiiaed/saucie:build
+    workingDir: '{{ globals.artifacts_path }}/repo'
+    imagePullPolicy: Always
+    command:
+    - python
+    args:
+    - -m
+    - bin.saucie_batches
+    - --data
+    - "{{ data }}"
+    - --true_labels
+    - "{{ true_labels }}"
+    - --batches
+    - "{{ batches }}"
