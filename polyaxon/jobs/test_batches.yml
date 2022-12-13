@@ -52,7 +52,7 @@ run:
     - python
     args:
     - -m
-    - bin.saucie_batches
+    - bin.prep_test_batches.py
     - --data
     - "{{ data }}"
     - --true_labels
