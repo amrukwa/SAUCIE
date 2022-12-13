@@ -61,16 +61,16 @@ X = X - np.min(X, axis=0)
 X = X/np.max(X, axis=0)
 X = np.arcsinh(X)
 
-result_path = os.path.join(experiment.get_outputs_path(), 'normalized.npy')
-with (open(result_path, 'wb')) as outfile:
-    np.save(outfile, X)
-
 # Polyaxon
 # https://polyaxon.com/docs/experimentation/tracking/module/#log_data_ref
 
 experiment.log_data_ref('dataset_X', content=X)
 experiment.log_data_ref('dataset_y', content=y)
 experiment.log_data_ref('batches', content=batches)
+
+result_path = os.path.join(experiment.get_outputs_path(), 'normalized.npy')
+with (open(result_path, 'wb')) as outfile:
+    np.save(outfile, X)
 
 # Add model and batch corrected data
 models, results = model(X=X, batches=batches)

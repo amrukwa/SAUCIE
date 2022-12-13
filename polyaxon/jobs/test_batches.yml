@@ -52,7 +52,7 @@ run:
     - python
     args:
     - -m
-    - bin.prep_test_batches.py
+    - bin.prep_test_batches
     - --data
     - "{{ data }}"
     - --true_labels
