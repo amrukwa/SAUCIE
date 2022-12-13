@@ -63,7 +63,7 @@ X = np.arcsinh(X)
 
 result_path = os.path.join(experiment.get_outputs_path(), 'normalized.npy')
 with (open(result_path, 'wb')) as outfile:
-    np.save(outfile, X, delimiter=",")
+    np.save(outfile, X)
 
 # Polyaxon
 # https://polyaxon.com/docs/experimentation/tracking/module/#log_data_ref
@@ -80,12 +80,12 @@ embed, labels, cleaned_data = results
 
 result_path = os.path.join(experiment.get_outputs_path(), 'cleaned_data.npy')
 with (open(result_path, 'wb')) as outfile:
-    np.save(outfile, cleaned_data, delimiter=",")
+    np.save(outfile, cleaned_data)
 
 result_path = os.path.join(experiment.get_outputs_path(), 'embed.npy')
 with (open(result_path, 'wb')) as outfile:
-    np.save(outfile, embed, delimiter=",")
+    np.save(outfile, embed)
 
 result_path = os.path.join(experiment.get_outputs_path(), 'labels.npy')
 with (open(result_path, 'wb')) as outfile:
-    np.save(outfile, labels, delimiter=",")
+    np.save(outfile, labels)
