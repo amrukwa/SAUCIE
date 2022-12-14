@@ -3,13 +3,23 @@ name: Pytest
 on: [push]
 
 jobs:
-  docker_tests:
+  docker_base_test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Run unit tests
         run: docker build . --file docker/unittest.Dockerfile --tag unittest
+        env:
+          ENABLE_SLOW_TESTS: True
+
+  docker_deploy_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Run unit tests
+        run: docker build . --file docker/unittest_deploy.Dockerfile --tag unittest
         env:
           ENABLE_SLOW_TESTS: True
 

@@ -231,7 +231,7 @@ class SAUCIE_BN(object):
         nonref_el = tf.squeeze(tf.equal(batches, 1))
         nonref_el = tf.ensure_shape(nonref_el, [None])
         K_12 = tf.boolean_mask(tf.transpose(K_12), nonref_el)
-        K_12_ = tf.reduce_sum(tf.transpose(K_12))
+        K_12_ = tf.reduce_sum(K_12)
         k_12_coeff = K_12_ / (bsize_ref * bsize_nonref)
 
         loss_b = var_in_ref + var_in_nonref - 2 * k_12_coeff
