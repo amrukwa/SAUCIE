@@ -42,5 +42,5 @@ def test_saucie_gets_batches():
 #     assert 0 == 0
 
 
-def test_saucie_returns_embeds():
-    assert 0 == 0
+# def test_saucie_returns_embeds():
+#     assert 0 == 0
