@@ -100,7 +100,7 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
             X_transformed[np.where(y == batch_name)] = X_trans
             if self.y_[0] in batches_vals:
                 if len(self.history) == 1:
-                    best_hist = self.history[1].history['loss'][-1]
+                    best_hist = self.history[0].history['loss'][-1]
                     X_trans = ae_.predict([X[np.where(y == self.y_)],
                                           ref_batch])
                     X_transformed[np.where(y == self.y_)] = X_trans
