@@ -57,8 +57,8 @@ y = load_data(args.true_labels)
 batches = load_data(args.batches)
 
 # normalize data for SAUCIE
-X = X - np.min(X, axis=0)[np.newaxis, :]
-X = X/np.max(X, axis=0)[np.newaxis, :]
+X = X - np.min(X, axis=0)
+X = X/np.max(X, axis=0)
 X = np.arcsinh(X)
 
 # Polyaxon

@@ -50,9 +50,9 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
         if y is None:
             y = np.zeros(X.shape[0])
         if self.normalize:
-            self._min_x = np.min(X, axis=0)[np.newaxis, :]
+            self._min_x = np.min(X, axis=0)
             X = X - self._min_x
-            self._max_x = np.max(X, axis=0)[np.newaxis, :]
+            self._max_x = np.max(X, axis=0)
             X = X/self._max_x
             X = np.arcsinh(X)
         self.y_ = y[np.where(y == np.unique(y)[0])]
