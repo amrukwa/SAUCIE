@@ -103,16 +103,16 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
                 if len(self.history) == 1:
                     same = np.zeros(y[np.where(y == self.y_[0])].shape[0])
                     best_hist = self.history[0].history['loss'][-1]
-                    X_trans = ae_.predict([X[np.where(y == self.y_)],
+                    X_trans = ae_.predict([X[np.where(y == self.y_[0])],
                                            same])
-                    X_transformed[np.where(y == self.y_)] = X_trans
+                    X_transformed[np.where(y == self.y_[0])] = X_trans
                 else:
                     cur_hist = self.history[-1].history['loss'][-1]
                     if best_hist > cur_hist:
                         best_hist = cur_hist
-                        X_trans = ae_.predict([X[np.where(y == self.y_)],
+                        X_trans = ae_.predict([X[np.where(y == self.y_[0])],
                                               same])
-                        X_transformed[np.where(y == self.y_)] = X_trans
+                        X_transformed[np.where(y == self.y_[0])] = X_trans
         return X_transformed
 
 
