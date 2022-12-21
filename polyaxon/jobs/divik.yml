@@ -1,12 +1,54 @@
+---
 version: 1.1
-kind: operation
+kind: component
+tags:
+  - divik
+  - metrics
+name: divik_test_metrics
+presets:
+  - default
+queue: cpu_medium
 
-params:
-  config:
-    value: config.gin
-  data:
-    value: /data/kiaed01/msi/divik-paper/data.npy
-  xy:
-    value: /data/kiaed01/msi/divik-paper/xy.csv
+# more here: https://polyaxon.com/docs/core/specification/io/
+inputs:
+  - name: data
+    type: path
+    value: /data/gluster/saucie/PBMC/pbmc_filtered.npy
+    isOptional: true
+  - name: true_labels
+    type: path
+    value: /data/gluster/saucie/PBMC/true_labels.npy
+    isOptional: true
+  - name: distance
+    type: string
+    value: 'euclidean'
+    isOptional: true
 
-pathRef: ../components/divik.yml
+outputs:
+  - name: model
+    type: artifacts
+    description: DiVAE model
+  - name: labels
+    type: artifacts
+    description: DiVAE clustering
+
+run:
+  kind: job
+  connections:
+      - cache
+      - data
+  container:
+    image: quay.io/kiiaed/saucie:build
+    workingDir: '{{ globals.artifacts_path }}/repo'
+    imagePullPolicy: Always
+    command:
+    - python
+    args:
+    - -m
+    - bin.divik
+    - --data
+    - "{{ data }}"
+    - --true_labels
+    - "{{ true_labels }}"
+    - --distance
+    - "{{ distance }}"
