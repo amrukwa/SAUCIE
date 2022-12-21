@@ -3,7 +3,7 @@ import os
 import pickle
 
 import numpy as np
-from divik.cluster import DiviK
+from divik.cluster import DiviK, DunnSearch, KMeans, GAPSearch
 from polyaxon.tracking import Run
 from sklearn.metrics import adjusted_rand_score, silhouette_score
 
@@ -20,7 +20,22 @@ def path(file):
 
 
 def model(X, distance):
-    estimator = DiviK(distance=distance).fit(X)
+    kmeans = KMeans(n_clusters=1, distance=distance, init='kdtree_percentile',
+                    leaf_size=0.01, percentile=99.0, max_iter=100,
+                    normalize_rows=True)
+    gapsearch = GAPSearch(kmeans=kmeans, max_clusters=2, n_jobs=-1, seed=42,
+                          n_trials=10, sample_size=10000, drop_unfit=True,
+                          verbose=True)
+    dunnsearch = DunnSearch(kmeans=kmeans, max_clusters=10, method="auto",
+                            inter="closest", intra="furthest",
+                            sample_size=10000, seed=42, n_jobs=-1,
+                            drop_unfit=True, verbose=True)
+    estimator = DiviK(kmeans=dunnsearch, fast_kmeans=gapsearch,
+                      distance=distance, minimal_size=200, rejection_size=20,
+                      minimal_features_percentage=0.05,
+                      features_percentage=1.0, normalize_rows=True,
+                      use_logfilters=True, filter_type="gmm",
+                      n_jobs=-1, verbose=True).fit(X)
     labels = estimator.labels_
     return estimator, labels
 
