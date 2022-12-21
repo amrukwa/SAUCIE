@@ -20,7 +20,7 @@ inputs:
     value: /data/gluster/saucie/PBMC/true_labels.npy
     isOptional: true
   - name: distance
-    type: string
+    type: str
     value: 'euclidean'
     isOptional: true
 
