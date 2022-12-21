@@ -3,7 +3,7 @@ import os
 import pickle
 
 import numpy as np
-from divik.cluster import DiviK, DunnSearch, KMeans, GAPSearch
+from divik.cluster import DiviK, DunnSearch, GAPSearch, KMeans
 from polyaxon.tracking import Run
 from sklearn.metrics import adjusted_rand_score, silhouette_score
 

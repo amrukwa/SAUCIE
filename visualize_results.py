@@ -27,7 +27,7 @@ def common_layout_update(fig, height, width, t):
 
 def plot_mixing_ratios(files, folder=""):
     np.random.seed(1)
-    mixes = ["original", "SAUCIE", "DiVAE",
+    mixes = ["original", "SAUCIE",
              "PCA", "PCA + UMAP", "PCA + t-SNE"]
     subfolder = "ratios/"
     fig = go.Figure()
@@ -66,7 +66,7 @@ def plot_clustering(embed_file, files, folder=""):
     nrows = 3
     ncols = 2
     clustering_methods = ["Ground truth", "SAUCIE",
-                          "DiVAE", "Louvain",
+                          "DiviK", "Louvain",
                           "k-means", "hierarchical"]
     embed = pd.read_csv(folder+"embed/"+embed_file+".csv",
                         header=None)
@@ -99,10 +99,10 @@ def plot_clustering(embed_file, files, folder=""):
 
 
 def plot_dim_red(cluster_file, files, folder=""):
-    dim_red_methods = ["SAUCIE", "DiVAE",
-                       "PCA", "PCA + UMAP",
+    dim_red_methods = ["SAUCIE", "PCA",
+                       "PCA + UMAP",
                        "PCA + t-SNE"]
-    nrows = 3
+    nrows = 2
     ncols = 2
     labels = pd.read_csv(folder+"cluster/"+cluster_file+".csv",
                          delimiter=',', header=None)
@@ -122,10 +122,10 @@ def plot_dim_red(cluster_file, files, folder=""):
             fig = get_subplot(fig, embed[0, :], embed[1, :], labels,
                               col=j, row=i, showlegend=showlegend)
     fig = common_layout_update(fig, 1000, 1200, t=30)
-    fig.update_layout(legend=dict(yanchor="top",
-                                  y=0.25,
-                                  xanchor="left",
-                                  x=0.55))
+    # fig.update_layout(legend=dict(yanchor="top",
+    #                               y=0.25,
+    #                               xanchor="left",
+    #                               x=0.55))
     return fig
 
 
@@ -133,20 +133,18 @@ def compare_distributions(files, folder=""):
     subfolder = "ratios/"
     original = np.genfromtxt(folder+subfolder+files[0]+".csv", delimiter=',')
     saucie = np.genfromtxt(folder+subfolder+files[1]+".csv", delimiter=',')
-    divae = np.genfromtxt(folder+subfolder+files[2]+".csv", delimiter=',')
-    pca = np.genfromtxt(folder+subfolder+files[3]+".csv", delimiter=',')
-    umap = np.genfromtxt(folder+subfolder+files[4]+".csv", delimiter=',')
-    tsne = np.genfromtxt(folder+subfolder+files[5]+".csv", delimiter=',')
-    pval = f_oneway(original, saucie, divae, pca, umap, tsne).pvalue
+    pca = np.genfromtxt(folder+subfolder+files[2]+".csv", delimiter=',')
+    umap = np.genfromtxt(folder+subfolder+files[3]+".csv", delimiter=',')
+    tsne = np.genfromtxt(folder+subfolder+files[4]+".csv", delimiter=',')
+    pval = f_oneway(original, saucie, pca, umap, tsne).pvalue
     print('{0:.16f}'.format(pval))
     if pval < 0.05:
-        print(tukey_hsd(original, saucie, divae, pca, umap, tsne))
+        print(tukey_hsd(original, saucie, pca, umap, tsne))
 
 
 def plot_batch_correction(batch_file, files, folder):
     dim_red_methods = ["SAUCIE batch uncorrected", "SAUCIE batch corrected",
-                       "DiVAE", "PCA",
-                       "PCA + UMAP", "PCA + t-SNE"]
+                       "PCA", "PCA + UMAP", "PCA + t-SNE"]
     batch = pd.read_csv(folder+batch_file+".csv",
                         delimiter=',', header=None)
     subfolder = "embed/"
@@ -156,6 +154,8 @@ def plot_batch_correction(batch_file, files, folder):
                         subplot_titles=dim_red_methods)
     for i in range(1, nrows+1):
         for j in range(1, ncols+1):
+            if (i-1)*ncols+j-1 == 5:
+                break
             filename = folder+subfolder+files[(i-1)*ncols+j-1]+".csv"
             embed = pd.read_csv(filename,
                                 delimiter=',',
@@ -164,11 +164,11 @@ def plot_batch_correction(batch_file, files, folder):
             showlegend = i == 1 and j == 1
             fig = get_subplot(fig, embed[0, :], embed[1, :], batch,
                               col=j, row=i, showlegend=showlegend)
-    fig = common_layout_update(fig, 1000, 1200, t=10)
-    fig.update_layout(legend=dict(yanchor="top",
-                                  y=1.025,
-                                  xanchor="left",
-                                  x=0.37))
+    fig = common_layout_update(fig, 1000, 1200, t=20)
+    # fig.update_layout(legend=dict(yanchor="top",
+    #                               y=1.025,
+    #                               xanchor="left",
+    #                               x=0.37))
     return fig
 
 
@@ -181,17 +181,15 @@ if __name__ == '__main__':
     parser.set_defaults(batches=False)
     args = parser.parse_args()
 
-    files_ratio = ["original", "saucie", "divae",
+    files_ratio = ["original", "saucie",
                    "pca", "umap", "tsne"]
     files_cluster = ["original", "saucie",
-                     "divae", "louvain",
+                     "divik", "louvain",
                      "kmeans", "hierarchical"]
-    files_dim_red = ["saucie", "divae",
-                     "pca", "umap",
-                     "tsne"]
-    files_batches = ["saucie0", "saucie",
-                     "divae", "pca",
+    files_dim_red = ["saucie", "pca",
                      "umap", "tsne"]
+    files_batches = ["saucie0", "saucie",
+                     "pca", "umap", "tsne"]
 
     compare_distributions(files_ratio, args.datafolder)
     fig = plot_mixing_ratios(files_ratio, args.datafolder)
