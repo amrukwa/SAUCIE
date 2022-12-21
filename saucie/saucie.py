@@ -67,6 +67,7 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X, y=None):
+        self.history = []
         ref_batch = np.zeros(self.y_.shape[0])
         if self.normalize:
             X = (X - self._min_x)/self._max_x
@@ -77,6 +78,7 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
         if batches_vals.shape[0] == 1 and self.y_[0] == batches_vals[0]:
             return X
         X_transformed = np.zeros(X.shape)
+        best_hist = np.Inf
         for batch_name in batches_vals:
             if batch_name == self.y_[0]:
                 # leaving reference batch unchanged
@@ -98,21 +100,14 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
             X_trans = ae_.predict([X[np.where(y == batch_name)],
                                    nonref_batch])
             X_transformed[np.where(y == batch_name), :] = X_trans
-
             if self.y_[0] in batches_vals:
-                if len(self.history) == 1:
-                    same = np.zeros(y[np.where(y == self.y_[0])].shape[0])
-                    best_hist = self.history[0].history['loss'][-1]
+                same = np.zeros(y[np.where(y == self.y_[0])].shape[0])
+                cur_hist = self.history[-1].history['loss'][-1]
+                if best_hist > cur_hist:
+                    best_hist = cur_hist
                     X_trans = ae_.predict([X[np.where(y == self.y_[0])],
-                                           same])
+                                          same])
                     X_transformed[np.where(y == self.y_[0])] = X_trans
-                else:
-                    cur_hist = self.history[-1].history['loss'][-1]
-                    if best_hist > cur_hist:
-                        best_hist = cur_hist
-                        X_trans = ae_.predict([X[np.where(y == self.y_[0])],
-                                              same])
-                        X_transformed[np.where(y == self.y_[0])] = X_trans
         return X_transformed
 
 
