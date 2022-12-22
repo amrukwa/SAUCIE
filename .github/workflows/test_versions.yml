@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Run unit tests
-        run: docker build . --file docker/unittest_deploy.Dockerfile --tag unittest
+        run: docker build . --file docker/unittest_deploy.Dockerfile --build-arg ignore_test=test_saucie.py --tag unittest
         env:
           ENABLE_SLOW_TESTS: True
 
