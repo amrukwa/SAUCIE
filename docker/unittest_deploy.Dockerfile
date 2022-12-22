@@ -20,4 +20,5 @@ RUN poetry config virtualenvs.create false &&\
 COPY saucie/ ./saucie/
 COPY streamlit_elements/ ./streamlit_elements/
 COPY ${test_var} ./test/
-RUN poetry run pytest
+COPY test/test_data/ ./test//test_data/
+RUN python -m pytest
