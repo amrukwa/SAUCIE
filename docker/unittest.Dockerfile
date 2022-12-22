@@ -1,5 +1,5 @@
 FROM python:3.8
-ARG ignore_test
+ARG test_var=test/
 ENV SHELL /bin/bash
 WORKDIR /code
 RUN apt-get update &&\
@@ -19,5 +19,5 @@ RUN poetry config virtualenvs.create false &&\
     poetry install --without deploy,dev
 COPY saucie/ ./saucie/
 COPY streamlit_elements/ ./streamlit_elements/
-COPY test/ ./test/
-RUN poetry run pytest --ignore=$ignore_test
+COPY ${test_var} ./test/
+RUN poetry run pytest
