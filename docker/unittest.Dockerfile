@@ -20,4 +20,4 @@ RUN poetry config virtualenvs.create false &&\
 COPY saucie/ ./saucie/
 COPY streamlit_elements/ ./streamlit_elements/
 COPY test/ ./test/
-RUN poetry run pytest --ignore=ignore_test
+RUN poetry run pytest --ignore=$ignore_test
