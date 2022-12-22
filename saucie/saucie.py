@@ -102,8 +102,12 @@ class SAUCIE_batches(BaseEstimator, TransformerMixin):
             X_transformed[np.where(y == batch_name), :] = X_trans
             if self.y_[0] in batches_vals:
                 same = np.zeros(y[np.where(y == self.y_[0])].shape[0])
-                cur_hist = self.history[-1].history['loss'][-1]
-                if best_hist > cur_hist:
+                if self.epochs == 0:
+                    X_trans = ae_.predict([X[np.where(y == self.y_[0])],
+                                          same])
+                    X_transformed[np.where(y == self.y_[0])] = X_trans
+                elif self.history[-1].history['loss'][-1] < best_hist:
+                    cur_hist = self.history[-1].history['loss'][-1]
                     best_hist = cur_hist
                     X_trans = ae_.predict([X[np.where(y == self.y_[0])],
                                           same])
