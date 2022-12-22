@@ -1,4 +1,4 @@
-name: Check consistency between package binaries
+name: Environment consistency
 on: [push]
 
 jobs:
